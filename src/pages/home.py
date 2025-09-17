@@ -1,8 +1,3 @@
-# 🎯 Présentation du dataset (origine, description, nombre d’années couvertes).
-# 📊 Chiffres clés affichés avec des metrics :
-# Total naissances, mariages, décès.
-# timeline globale avec les 3 evènement superposés : en gros les nombre de naissance et deces
-
 import streamlit as st
 import plotly.express as px
 from src.utils import dataset_load, counter_data_total, aggregate_by_gender, multiple_aggregate_by_year, top_name
