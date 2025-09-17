@@ -73,9 +73,9 @@ d2.plotly_chart(fig2, theme=None)
 
 
 st.write("Top 5 des prénoms sur la période 1981-2016")
-st.bar_chart(data=top_name(dataset=birth_load, column_name="pr1", limiter=5))
+st.bar_chart(data=top_name(dataset=birth_load, column_name="pr1", limiter=5), x_label="Prénoms", y_label="Nombre d'occurrences")
 
-st.markdown("""#### 4. Approfondir l'exploration""")
+st.markdown("""#### 4. Approfondir l'exploration ?""")
 
 left, middle, right = st.columns(3)
 left.page_link(label="Explorons les naissances", page="src/pages/birth.py", width="stretch")

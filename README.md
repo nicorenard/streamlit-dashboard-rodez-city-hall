@@ -23,7 +23,7 @@ pour démarrer sur le sujet !
 - Les décès : un Focus sur le dataset des décès
 - Les mariages : un focus sur le dataset des mariages
 - Exploration générationnelle : Pour croiser les données entre elles
-- Modélisation avancés : indices démographiques entre autres, espérances de vies
+- Modélisation avancées : indices démographiques entre autres, espérances de vies
 - Quizz et jeux : Quelques quizz interactif basé sur les dataset qui seront présentés en amont, recherche de prénoms
 
 ## Déploiement
