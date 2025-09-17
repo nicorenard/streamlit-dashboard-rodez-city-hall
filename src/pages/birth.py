@@ -1,21 +1,18 @@
-"""📊 Timeline interactive des naissances par année/mois.
-🎨 Top prénoms par décennie (tableau + nuage de mots).
-🔍 Comparateur de prénoms (Marie vs Emma, etc.).
-"""
 import streamlit as st
 import plotly.graph_objects as go
+import streamlit_shadcn_ui as ui
 
 from src.utils import (dataset_load, aggregate_birth_by_gender_and_by_year, top_or_down_birth,
-                       top_name_by_year_and_gender, aggregate_by_year, top_name_by_genre, find_name_query)
+                       top_name_by_year_and_gender, aggregate_by_year, top_name_by_genre, find_name_query, name_vs_name)
 
 
 #data
 birth_load = dataset_load("liste_des_naissances.csv")
 
 # header
-col1,col2 = st.columns([1,4])
-logo = col1.image(image="src/assets/rodez_logo_propre.png", width=150)
-col2.title("Exploration des naissances à Rodez ")
+left,right = st.columns([1, 4])
+logo = left.image(image="src/assets/rodez_logo_propre.png", width=150)
+right.title("Exploration des naissances à Rodez ")
 
 st.write("Le dataset des naissances est plutôt léger en terme de richesse des données.\n\n"
          "On notera cependant les élements suivant qui permettent : \n\n"
@@ -56,17 +53,13 @@ st.write("#### Note\n"
          "dans cet article du Monde : https://www.lemonde.fr/archives/article/1983/10/05/la-natalite-continue-de-baisser-en"
          "-france-50-000-naissances-de-moins-en-1983_3077597_1819218.html")
 
-# filtre par année et décénie ? evènements important avec une checkbox
-# heatmatp par mois pour voir les pics de naissance
-# barchart avec ratio fille/garçon + année sur timeline
-
 
 ## analyse de prénoms
 st.divider()
 st.markdown("""### 2. Focus sur les prénoms """)
 # top des prénoms par ans ou sur 10ans en bar chart/table
 
-st.write("### Top prénoms par année et par genre")
+st.write("#### a. Top prénoms par année et par genre")
 result = top_name_by_year_and_gender(birth_load)
 styled = (
     result.style
@@ -79,16 +72,15 @@ styled = (
 st.dataframe(styled, use_container_width=True)
 
 # recherche input d'un prénom pour avoir le nombre d'occurence + sa courbe dans le temps
-st.write("### Tendance et occurrence d'un prénom")
+st.write("#### b. Tendance et occurrence d'un prénom")
 
 name_input = st.text_input(label="Inscrire un prénom 👇")
 if name_input :
     result = find_name_query(birth_load, name_input)
-    print(result)
     st.metric("Nombre total d'occurrences détectées", result["total_occurence"])
     df_linechart = result["occurence_by_time"].reset_index()
     df_linechart.columns = ["annee", "naissances"]
-    st.line_chart(df_linechart, x="annee", y="naissances")
+    st.line_chart(df_linechart, x="annee", y="naissances", x_label="Années", y_label="Nombre de naissances")
 
 
 # comparaison entre 2 prénoms
@@ -99,63 +91,71 @@ st.markdown("""### 3. Quelques indicateurs de records""")
 
 # records de prénoms le plus données coté fille et coté garçon
 st.markdown("""#### a. Records des prénoms""")
+
 name = top_name_by_genre(dataset=birth_load)
 boy, girl = st.columns(2)
 
 with boy:
-    st.metric("👨Top prénom Homme",
-              value=name["male"])
+    ui.metric_card(
+        title="👨 Prénom masculin le plus fréquent",
+        content=name["male"]
+    )
+
 with girl:
-    st.metric("👩 Top prénom Femme",
-              value=name["female"])
+    ui.metric_card(
+        title="👩 Prénom féminin le plus fréquent",
+        content=name["female"]
+    )
+
 
 # record de naissances, naissances la plus basse
-st.markdown("""
-<strong><span style="font-size:25px;">b. Records des naissances</span>
-<span style="font-size:12px;"> avec valeur totale</span></strong>
-""", unsafe_allow_html=True)
-
-
+st.markdown("""#### b. Records des Naissances""")
 
 result = top_or_down_birth(birth_load)
 top, down = st.columns(2)
 
 with top:
-    st.metric("📊 Année la plus haute (total)",
-              value=result["all"]["highest_year"]["year"],
-              delta=result["all"]["highest_year"]["value"],
-              delta_color="off")
+    ui.metric_card(
+        title="📊 Année la plus haute (total)",
+        content=result["all"]["highest_year"]["year"],
+        description=f"{result['all']['highest_year']['value']} naissances"
+    )
 
     top_female, top_male = st.columns(2)
 
     with top_female:
-        st.metric("♀️ Féminin",
-                  value=result["female"]["highest_year"]["year"],
-                  delta=result["female"]["highest_year"]["value"],
-                  delta_color="off")
+        ui.metric_card(
+            title="♀️ Féminin",
+            content=result["female"]["highest_year"]["year"],
+            description=f"{result['female']['highest_year']['value']} naissances"
+        )
 
     with top_male:
-        st.metric("♂️ Masculin",
-                  value=result["male"]["highest_year"]["year"],
-                  delta=result["male"]["highest_year"]["value"],
-                  delta_color="off")
+        ui.metric_card(
+            title="♂️ Masculin",
+            content=result["male"]["highest_year"]["year"],
+            description=f"{result['male']['highest_year']['value']} naissances"
+        )
 
 with down:
-    st.metric("📉 Année la plus basse (total)",
-              result["all"]["lowest_year"]["year"],
-              delta=result["all"]["lowest_year"]["value"],
-              delta_color="off")
+    ui.metric_card(
+        title="📉 Année la plus basse (total)",
+        content=result["all"]["lowest_year"]["year"],
+        description=f"{result['all']['lowest_year']['value']} naissances"
+    )
 
     top_female2, top_male2 = st.columns(2)
 
     with top_female2:
-        st.metric("♀️ Féminin",
-                  result["female"]["lowest_year"]["year"],
-                  delta=result["female"]["lowest_year"]["value"],
-                  delta_color="off")
+        ui.metric_card(
+            title="♀️ Féminin",
+            content=result["female"]["lowest_year"]["year"],
+            description=f"{result['female']['lowest_year']['value']} naissances"
+        )
 
     with top_male2:
-        st.metric("♂️ Masculin",
-                  result["male"]["lowest_year"]["year"],
-                  delta=result["male"]["lowest_year"]["value"],
-                  delta_color="off")
+        ui.metric_card(
+            title="♂️ Masculin",
+            content=result["male"]["lowest_year"]["year"],
+            description=f"{result['male']['lowest_year']['value']} naissances"
+        )
