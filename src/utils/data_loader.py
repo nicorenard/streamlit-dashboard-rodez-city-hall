@@ -1,22 +1,14 @@
-from typing import Any, Dict, Literal
+from typing import Dict
 
 import pandas as pd
 from pathlib import Path
 
 from pandas import DataFrame
-from pandas.core.groupby import DataFrameGroupBy
+
 
 from .data_loader_rules import is_lower, is_csv
 
-
-#charger le csv :
-# check extension = ok
-#check delimiter = ok
-# check filename = ok
-
 #nettoyer le dataset  :
-#   nettoyer les caractères unicodes = fichier corrompu de le debut
-#   remplacer les date vides ou resultat vide,
 #   formater les dates
 
 
@@ -120,19 +112,33 @@ def _reshape_names_by_gender_and_year(dataset: pd.DataFrame) -> pd.DataFrame:
     df = df[df["prenom"].str.strip() != ""] # strip empty value
     return df
 
-def find_name_query(dataset : pd.DataFrame, name : str) -> dict[str, int | pd.Series]:
+def find_name_query(dataset : pd.DataFrame, name : str) -> Dict[str, int | pd.Series]:
     df = _reshape_names_by_gender_and_year(dataset)
-    #
-    print(df)
     df_name = df[df["prenom"].str.lower() == name.lower()] # filter on name
-    #
-    print(df_name)
     total_name = len(df_name)
     occurrence_in_year = df_name.groupby("annee").size()
     return {
         "total_occurence" : total_name,
         "occurence_by_time" : occurrence_in_year
 
+    }
+
+def name_vs_name(dataset: pd.DataFrame, name1:str, name2: str) -> Dict[str, str]:
+    result_name1 = find_name_query(dataset, name1)
+    result_name2 = find_name_query(dataset, name2)
+
+    if result_name1["total_occurence"] > result_name2["total_occurence"]:
+        winner = name1
+    elif result_name1["total_occurence"] == result_name2["total_occurence"]:
+        winner = "Exæquo"
+    else:
+        winner = name2
+
+
+    return {
+        name1: result_name1["total_occurence"],
+        name2: result_name2["total_occurence"],
+        "winner": winner
     }
 
 

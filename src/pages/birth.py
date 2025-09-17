@@ -84,6 +84,24 @@ if name_input :
 
 
 # comparaison entre 2 prénoms
+st.write("#### c. Versus !")
+st.write("Un petit comparatif rapide d'occurrence sur la période entre 2 prénoms")
+left, right = st.columns(2)
+
+with left:
+    name1 = st.text_input("1er prénom ?  👇", key="prenom1")
+with right:
+    name2 = st.text_input("2ème prénom ? 👇", key="prenom2")
+
+if name1 and name2:
+    result = name_vs_name(birth_load, name1, name2)
+
+    left.metric(name1, result[name1])
+    right.metric(name2, result[name2])
+
+    st.balloons()
+    st.success(f"🏆 Et le gagnant est : {result['winner']}")
+
 
 ## indicateurs
 st.divider()
