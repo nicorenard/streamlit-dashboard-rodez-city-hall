@@ -12,7 +12,7 @@ birth_load = dataset_load("liste_des_naissances.csv")
 # header
 left,right = st.columns([1, 4])
 logo = left.image(image="src/assets/rodez_logo_propre.png", width=150)
-right.title("Exploration des naissances à Rodez ")
+right.title("Exploration des naissances")
 
 st.write("Le dataset des naissances est plutôt léger en terme de richesse des données.\n\n"
          "On notera cependant les élements suivant qui permettent : \n\n"
@@ -85,7 +85,7 @@ if name_input :
 
 # comparaison entre 2 prénoms
 st.write("#### c. Versus !")
-st.write("Un petit comparatif rapide d'occurrence sur la période entre 2 prénoms")
+st.write("Petit comparatif rapide d'occurrence sur la période entre 2 prénoms")
 left, right = st.columns(2)
 
 with left:
@@ -99,8 +99,11 @@ if name1 and name2:
     left.metric(name1, result[name1])
     right.metric(name2, result[name2])
 
-    st.balloons()
-    st.success(f"🏆 Et le gagnant est : {result['winner']}")
+    if result[name1] == result[name2]:
+        st.success(f"{result['winner']}")
+    else:
+        st.balloons()
+        st.success(f"🏆 Et le gagnant est : {result['winner']}")
 
 
 ## indicateurs

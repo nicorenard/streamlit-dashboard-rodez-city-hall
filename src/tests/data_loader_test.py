@@ -6,7 +6,7 @@ from unittest import TestCase
 import pandas as pd
 
 from src.utils import aggregate_by_year
-from src.utils.data_loader import dataset_load, counter_data_total, _load_with_unknown_delimiter, \
+from src.utils.data_loader import dataset_load, size_dataset, _load_with_unknown_delimiter, \
     multiple_aggregate_by_year, aggregate_by_gender
 from src.utils.data_loader_rules import is_csv, is_lower
 
@@ -87,7 +87,7 @@ class DataLoader(TestCase):
             "35/06/1891"]
             }
         )
-        result = counter_data_total(df_test)
+        result = size_dataset(df_test)
         assert result == 5
 
     def test_should_aggregate_by_year(self) -> None:

@@ -1,6 +1,6 @@
 import streamlit as st
 import plotly.express as px
-from src.utils import dataset_load, counter_data_total, aggregate_by_gender, multiple_aggregate_by_year, top_name
+from src.utils import dataset_load, size_dataset, aggregate_by_gender, multiple_aggregate_by_year, top_name
 
 col1,col2 = st.columns([1,4])
 logo = col1.image(image="src/assets/rodez_logo_propre.png", width=150)
@@ -32,11 +32,11 @@ st.write("Dans ce premier set, les valeurs sont les totaux relevés sans tri des
 # carte ou metrics simples
 n, m, d = st.columns(3)
 birth_load = dataset_load("liste_des_naissances.csv")
-birth = counter_data_total(birth_load)
+birth = size_dataset(birth_load)
 death_load = dataset_load("liste_des_deces.csv")
-death = counter_data_total(death_load)
+death = size_dataset(death_load)
 wedding_load = dataset_load("liste_des_mariages.csv")
-wedding = counter_data_total(wedding_load)
+wedding = size_dataset(wedding_load)
 n.metric(label="Nombre total des naissances", value=f"{birth}", border=True)
 m.metric(label="Nombre total des mariages", value=f"{wedding}", border=True)
 d.metric(label="Nombre total des décès", value=f"{death}", border=True)

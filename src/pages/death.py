@@ -20,7 +20,7 @@ death_load = dataset_load("liste_des_deces.csv")
 # header
 left,right = st.columns([1, 4])
 logo = left.image(image="src/assets/rodez_logo_propre.png", width=150)
-right.title("Exploration des décès à Rodez ")
+right.title("Exploration des décès")
 
 st.write("Le dataset des décès est très léger en terme de richesse des données.\n\n"
          "On notera cependant les élements suivant qui permettent : \n\n"
@@ -40,8 +40,8 @@ with st.container():
     st.bar_chart(df, x_label="Années", y_label="Nombre de naissances total")
 
 st.write("#### Note\n"
-         "On remarque les pics historique sur les années des deux grandes guerres mondiales mais également apres"
-         "la période des 30 glorieuses que le nombre de décès ne cesse de croire. Une analyse croisée avec les naissances"
+         "On remarque les pics historique sur les années des deux grandes guerres mondiales mais également apres "
+         "la période des 30 glorieuses que le nombre de décès ne cesse de croire. Une analyse croisée avec les naissances "
          "pourra expliquer cette tendance à la hausse si la population vieillissante n'est pas renouvelée...")
 
 st.markdown("""#### b. Vue par genres""")
@@ -63,6 +63,21 @@ st.plotly_chart(fig, use_container_width=True)
 st.write("#### Note\n"
          "La vue par genre n'est pas parfaite car beaucoup de lignes ne sont pas complète et la précision du genre est"
          "plus visible vers les années 2000...")
+         "La vue par genre n'est pas parfaite car beaucoup de lignes ne sont pas complète et la précision du genre est "
+         "plus présente dans le relevé vers les années 2000...")
 
+st.markdown("""### 2. Quelques indicateurs """)
+# Année la plus haute / la plus basse en nombre de décès avec ui.metric_card.
+
+st.write("""Espérance de vie moyenne par année""")
+#
+# Comparaison hommes vs femmes.
+#3. Analyse temporelle dans l’année
+
+#Avec date_deces et heure_deces :
+
+#Décès par mois → saisonnalité (hiver/été).
+#Décès par jour de la semaine
+#Décès par tranche horaire (matin / après-midi / nuit)?
 
 
