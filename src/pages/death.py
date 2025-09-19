@@ -12,7 +12,6 @@ import streamlit as st
 import plotly.graph_objects as go
 import streamlit_shadcn_ui as ui
 
-from src.utils import dataset_load, aggregate_by_year, aggregate_birth_by_gender_and_by_year
 from src.utils import (dataset_load, aggregate_by_year, aggregate_birth_by_gender_and_by_year,
                        top_and_down_death_year, average_death_age_by_year, death_age_histogram)
 
@@ -68,8 +67,6 @@ st.write("#### Note\n"
 
 st.markdown("""### 2. Quelques indicateurs """)
 
-# Année la plus haute / la plus basse en nombre de décès avec ui.metric_card.
-
 result = top_and_down_death_year(death_load)
 top, down = st.columns(2)
 
@@ -88,6 +85,14 @@ with down:
         description=f"{result['lowest_year']['value']} décès"
     )
 
+st.write("""Histogramme de l'age moyen du décès""")
+
+year_range = st.slider(label="Période à selectionner", min_value=1981, max_value=2016, value=(1981, 2016))
+histo = death_age_histogram(death_load, 20, year_range)
+st.bar_chart(histo)
+
+
+
 st.write("""Espérance de vie moyenne par année""")
 #
 # Comparaison hommes vs femmes.
@@ -99,4 +104,10 @@ st.write("""Espérance de vie moyenne par année""")
 #Décès par jour de la semaine
 #Décès par tranche horaire (matin / après-midi / nuit)?
 
+#4. Genre
+# Proportion des décès par genre chaque année.
+# Espérance de vie hommes vs femmes.
+
+# 5. Comparatifs
+# Comparaison de l’âge moyen au décès sur différentes périodes (ex. avant 1950 vs après 2000).
 

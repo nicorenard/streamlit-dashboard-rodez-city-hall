@@ -37,7 +37,7 @@ def dataset_load(file_name : str) -> pd.DataFrame:
     return df
 
 
-def counter_data_total(dataset : pd.DataFrame) -> int:
+def size_dataset(dataset : pd.DataFrame) -> int:
     return dataset.shape[0]
 
 
@@ -141,14 +141,12 @@ def name_vs_name(dataset: pd.DataFrame, name1:str, name2: str) -> Dict[str, str]
         "winner": winner
     }
 
-
 def aggregate_birth_by_gender_and_by_year(dataset: pd.DataFrame) -> pd.DataFrame:
     dataset["annee"] = pd.to_numeric(dataset["annee"], errors="coerce", downcast='integer')
     dataset_valid = dataset[dataset["annee"] > 0]
     df = dataset_valid.groupby(["annee", "genre"]).size().reset_index(name="count")
     df_pivot = df.pivot(index="annee", columns="genre", values="count").rename(columns={"F_minin": "Féminin","Ind_termin_": "Indéterminé"}).fillna(0)
     return df_pivot.astype(int)
-
 
 def top_or_down_birth(dataset: pd.DataFrame) -> Dict[str, Dict]:
     """
@@ -195,3 +193,27 @@ def top_and_down_death_year(dataset: pd.DataFrame) -> Dict:
         "lowest_year": {"year": int(lowest_year), "value": int(series.loc[lowest_year])}
         }
 
+
+def _age_of_death(dt : pd.DataFrame) -> pd.DataFrame:
+    dataset = dt.copy()
+    dataset["date_naissance"] = pd.to_datetime(dataset["date_naissance"],  errors="coerce", dayfirst=True)
+    dataset["date_deces"] = pd.to_datetime(dataset["date_deces"],  errors="coerce", dayfirst=True)
+    dataset["age_deces"] = (dataset["date_deces"] - dataset["date_naissance"]).dt.days // 365
+    dataset = dataset[dataset["age_deces"].notna()] # filter on NaN
+    dataset = dataset[dataset["age_deces"] >= 0]
+    dataset["date_naissance"] = dataset["date_naissance"].dt.date
+    dataset["date_deces"] = dataset["date_deces"].dt.date
+    return dataset.reset_index(drop=True)
+
+
+def death_age_histogram(dt: pd.DataFrame, bins: int= 20, range = None) -> pd.Series:
+    dataset = _age_of_death(dt)
+    if range:
+        dataset = dataset[(dataset["annee"] >= range[0]) & (dataset["annee"] <= range[1])]
+
+    histogram = pd.cut(dataset["age_deces"], bins=bins).value_counts().sort_index()
+    histogram.index = [
+        f"{int(interval.left)}-{int(interval.right)}"
+        for interval in histogram.index
+    ] # value are not float
+    return histogram
