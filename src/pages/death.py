@@ -109,9 +109,22 @@ st.altair_chart(chart1, use_container_width=True)
 
 st.write("""#### c. Espérance de vie moyenne par année et par genre""")
 
+df_av2 = average_death_age_by_year_and_genre(death_load).reset_index()
 
-#
-# Comparaison hommes vs femmes.
+chart2 = alt.Chart(df_av2).mark_area(opacity=0.3).encode(
+    x=alt.X("annee:O", title="Années"),  # ':O' = force ordinal axis -> no separator
+    y=alt.Y("age_deces:Q", title="Âge moyen au décès", stack=None),
+    color=alt.Color("genre:N", title="Genre",
+                    scale=alt.Scale(
+                        domain=["Masculin", "Feminin"],
+                        range=["blue", "red"]
+                        )
+                    ),
+    tooltip=["annee", "genre", "age_deces"]
+).interactive()  # allow zoom
+
+st.altair_chart(chart2, use_container_width=True)
+
 #3. Analyse temporelle dans l’année
 
 #Avec date_deces et heure_deces :

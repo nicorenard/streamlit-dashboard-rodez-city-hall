@@ -4,4 +4,4 @@ from .data_loader import (dataset_load, size_dataset,
                           top_name_by_genre, top_name_by_year_and_gender, find_name_query, name_vs_name,
                           top_and_down_death_year,
                           average_death_age_by_year,
-                          death_age_histogram)
+                          death_age_histogram, average_death_age_by_year_and_genre)

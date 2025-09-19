@@ -213,3 +213,9 @@ def death_age_histogram(dt: pd.DataFrame, bins: int= 20, year_range = None) -> p
         for interval in histogram.index
     ] # value are not float bug fix
     return histogram
+
+def average_death_age_by_year_and_genre(dt : pd.DataFrame) -> pd.DataFrame:
+    raw_df = _age_of_death(dt)
+    raw_df["genre"] = raw_df["genre"].str.replace("_", "e")
+    df = raw_df[["annee", "age_deces", "genre"]].copy()
+    return df.groupby(["annee", "genre"])["age_deces"].mean().reset_index()
