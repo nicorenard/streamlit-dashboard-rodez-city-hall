@@ -1,19 +1,10 @@
 from typing import Dict
-
 import pandas as pd
 from pathlib import Path
 
 from pandas import DataFrame
 
-
 from .data_loader_rules import is_lower, is_csv
-
-#nettoyer le dataset  :
-#   formater les dates
-
-
-# créer des fonctions utilitaires : en fonctions des besoins
-## # Total naissances, mariages, décès pour home.py
 
 def _load_with_unknown_delimiter(filepath: Path, delimiters=(",", ";", "\t", "|")):
     for sep in delimiters:
@@ -205,11 +196,16 @@ def _age_of_death(dt : pd.DataFrame) -> pd.DataFrame:
     dataset["date_deces"] = dataset["date_deces"].dt.date
     return dataset.reset_index(drop=True)
 
-
-def death_age_histogram(dt: pd.DataFrame, bins: int= 20, range = None) -> pd.Series:
+def average_death_age_by_year(dt : pd.DataFrame) -> pd.Series:
     dataset = _age_of_death(dt)
-    if range:
-        dataset = dataset[(dataset["annee"] >= range[0]) & (dataset["annee"] <= range[1])]
+    df = dataset[["annee", "age_deces"]].copy()
+    return df.groupby("annee")["age_deces"].mean()
+
+
+def death_age_histogram(dt: pd.DataFrame, bins: int= 20, year_range = None) -> pd.Series:
+    dataset = _age_of_death(dt)
+    if year_range:
+        dataset = dataset[(dataset["annee"] >= year_range[0]) & (dataset["annee"] <= year_range[1])]
 
     histogram = pd.cut(dataset["age_deces"], bins=bins).value_counts().sort_index()
     histogram.index = [

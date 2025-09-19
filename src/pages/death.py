@@ -9,6 +9,7 @@ Note : beaucoup de données ont que al date de deces mais pas la date de naissan
 """
 
 import streamlit as st
+import altair as alt
 import plotly.graph_objects as go
 import streamlit_shadcn_ui as ui
 
@@ -85,15 +86,29 @@ with down:
         description=f"{result['lowest_year']['value']} décès"
     )
 
-st.write("""Histogramme de l'age moyen du décès""")
+st.write("""#### a. Histogramme de l'age moyen du décès""")
+
+st.info("""##### Note
+Les données ici ne prennent pas en compte que les lignes complètes avec date de décès et de naissances!""")
+
 
 year_range = st.slider(label="Période à selectionner", min_value=1981, max_value=2016, value=(1981, 2016))
 histo = death_age_histogram(death_load, 20, year_range)
 st.bar_chart(histo)
 
+st.write("""#### b. Espérance de vie moyenne par année""")
+
+df = average_death_age_by_year(death_load).reset_index()
+df.columns = ["annee", "age_deces_moyen"]
+
+chart = alt.Chart(df).mark_area(opacity=0.3).encode(
+    x=alt.X("annee:O", title="Années"),  # ':O' force l'axe comme ordinal
+    y=alt.Y("age_deces_moyen:Q", title="Âges moyen des décès")
+)
+
+st.altair_chart(chart, use_container_width=True)
 
 
-st.write("""Espérance de vie moyenne par année""")
 #
 # Comparaison hommes vs femmes.
 #3. Analyse temporelle dans l’année
