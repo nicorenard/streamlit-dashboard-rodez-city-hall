@@ -266,14 +266,22 @@ def death_by_season_month(dt: pd.DataFrame) ->pd.Series:
         11: "Automne",
     })
     seasons = ["Hiver","Printemps","Ete","Automne"]
-    df_season = df.groupby("saison").size().reindex(seasons)
+    df_season = df.groupby("saison").size().reindex(seasons, fill_value=0)
     return df_season
 
 
-def death_by_day(dt: pd.DataFrame) ->pd.Series:
+def death_by_day(dt: pd.DataFrame) -> pd.Series:
     df = dt.copy()
     df["date_deces"] = pd.to_datetime(df["date_deces"], errors="coerce")
-    df["jours"] = df["date_deces"].dt.day_name()
-    days = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"]
-    death_d_df = df.groupby("jours").size().reindex(days)
+    df["jour_num"] = df["date_deces"].dt.dayofweek
+    jours_map = {
+        0: "Lundi", 1: "Mardi", 2: "Mercredi",
+        3: "Jeudi", 4: "Vendredi", 5: "Samedi", 6: "Dimanche"
+    }
+    death_d_df = (
+        df.groupby("jour_num").size()
+        .reindex(range(7), fill_value=0)
+    )
+    death_d_df.index = [jours_map[j] for j in death_d_df.index]
+
     return death_d_df

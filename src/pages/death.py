@@ -15,7 +15,8 @@ import streamlit_shadcn_ui as ui
 
 from src.utils import (dataset_load, aggregate_by_year, aggregate_by_gender_and_by_year,
                        top_and_down_death_year, average_death_age_by_year, death_age_histogram,
-                       average_death_age_by_year_and_genre, death_by_season_month, death_by_month_chart)
+                       average_death_age_by_year_and_genre, death_by_season_month, death_by_month_chart,
+                       death_by_day)
 
 #data
 death_load = dataset_load("liste_des_deces.csv")
@@ -149,32 +150,44 @@ st.write("""#### b. Analyses par saison sur la période complète""")
 
 df_season = death_by_season_month(death_load)
 
-# radar chart
-fig = go.Figure()
+df_plot1 = df_season.reset_index()
+df_plot1.columns = ["Catégorie", "Décès"]
 
-fig.add_trace(go.Scatterpolar(
-    r=df_season.values,
-    theta=df_season.index,
-    fill='toself',
-    name='Décès par saison',
-    line_color='red'
-))
-
-fig.update_layout(
-    polar=dict(
-        radialaxis=dict(
-            visible=True,
-            range=[0, df_season.values.max() * 1.1]  # un peu de marge
-        )
-    ),
-    showlegend=True,
-    title="Décès par saison"
+# Color scale simple
+chart = alt.Chart(df_plot1).mark_bar().encode(
+    x=alt.X("Catégorie:N", sort=df_plot1.index.tolist(), title=""),
+    y=alt.Y("Décès:Q", title="Nombre de décès"),
+    color=alt.Color("Décès:Q", scale=alt.Scale(scheme="reds")),
+    tooltip=["Catégorie", "Décès"]
+).properties(
+    title="Décès par saison",
+    width=600,
+    height=400
 )
 
-st.plotly_chart(fig, use_container_width=True)
+st.altair_chart(chart, use_container_width=True)
 
 #Décès par jour de la semaine
+st.write("""#### c. Analyses par jours sur la période complète""")
 
+df_days = death_by_day(death_load)
+df_plot3 = df_days.reset_index()
+df_plot3.columns = ["Jour", "Décès"]
+
+days_order = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
+
+# Créer le line chart
+chart3 = alt.Chart(df_plot3).mark_line(point=True, color="steelblue").encode(
+    x=alt.X("Jour:N", sort=days_order, title="Jour de la semaine"),
+    y=alt.Y("Décès:Q", title="Nombre de décès"),
+    tooltip=["Jour", "Décès"]
+).properties(
+    title="Décès par jour de la semaine",
+    width=600,
+    height=400
+)
+
+st.altair_chart(chart3, use_container_width=True)
 
 #4. Genre
 # Proportion des décès par genre chaque année.
