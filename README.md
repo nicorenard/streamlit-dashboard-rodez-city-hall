@@ -44,3 +44,9 @@ Le projet est packagé avec UV. Pour pouvoir déployer l'application en local su
 L'application est disponible sur le cloud sur l'hébergeur "streamlit cloud" : 
 
 "lien"
+
+
+### Ressources
+
+* https://cheat-sheets.streamlit.app/
+

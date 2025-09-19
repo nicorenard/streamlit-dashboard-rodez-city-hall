@@ -6,14 +6,17 @@ from unittest import TestCase
 import pandas as pd
 
 from src.utils import aggregate_by_year
-from src.utils.data_loader import dataset_load, size_dataset, _load_with_unknown_delimiter, \
-    multiple_aggregate_by_year, aggregate_by_gender
+from src.utils.data_loader import (
+    dataset_load,
+    size_dataset,
+    _load_with_unknown_delimiter,
+    multiple_aggregate_by_year,
+    aggregate_by_gender,
+)
 from src.utils.data_loader_rules import is_csv, is_lower
 
 
-
 class DataLoader(TestCase):
-
     # on va chercher la liste des naissances et on charge un dataframe
     def test_should_return_birth_data_dataframe(self) -> None:
         result = dataset_load("liste_des_naissances.csv")
@@ -27,14 +30,13 @@ class DataLoader(TestCase):
         result = dataset_load("liste_des_mariages.csv")
         assert isinstance(result, pandas.DataFrame)
 
-
     def test_should_load_a_valid_dataset_txt_extension(self) -> None:
-        file_path = Path(f"data/error_dataset.txt").resolve()
+        file_path = Path("data/error_dataset.txt").resolve()
         result = is_csv(file_path)
         assert not result
 
     def test_should_load_a_valid_dataset_csv_extension(self) -> None:
-        file_path = Path(f"data/liste_des_mariages.csv").resolve()
+        file_path = Path("data/liste_des_mariages.csv").resolve()
         result = is_csv(file_path)
         assert result
 
@@ -54,37 +56,34 @@ class DataLoader(TestCase):
         # on garde une référence à tmpdir pour éviter qu'il soit détruit trop tôt
         self.addCleanup(tmpdir.cleanup)
         return path
+
     def test_should_find_dataset_delimiter_is_semicolon(self):
-        csv_file = self._create_csv_file(
-            "filename;size\nrapport.pdf;1234\nphoto.JPG;5678"
-        )
+        csv_file = self._create_csv_file("filename;size\nrapport.pdf;1234\nphoto.JPG;5678")
         df = _load_with_unknown_delimiter(csv_file)
         self.assertEqual(list(df.columns), ["filename", "size"])
         self.assertEqual(df.shape, (2, 2))
 
     def test_should_find_dataset_delimiter_is_comma(self):
-        csv_file = self._create_csv_file(
-            "filename,size\nrapport.pdf,1234\nphoto.JPG,5678"
-        )
+        csv_file = self._create_csv_file("filename,size\nrapport.pdf,1234\nphoto.JPG,5678")
         df = _load_with_unknown_delimiter(csv_file)
         self.assertEqual(list(df.columns), ["filename", "size"])
         self.assertEqual(df.shape, (2, 2))
 
     def test_should_raise_error_when_delimiter_not_found(self):
-        csv_file = self._create_csv_file(
-            "filename/size\nrapport.pdf/1234\nphoto.JPG/5678"
-        )
+        csv_file = self._create_csv_file("filename/size\nrapport.pdf/1234\nphoto.JPG/5678")
         with self.assertRaises(ValueError):
             _load_with_unknown_delimiter(csv_file)
 
     def test_should_calculate_total_birth_date(self) -> None:
         df_test = pandas.DataFrame(
-            {"birth" : [
-            "31/07/1951",
-            "25/09/2004",
-            "01/12/2010",
-            "12/10/1899",
-            "35/06/1891"]
+            {
+                "birth": [
+                    "31/07/1951",
+                    "25/09/2004",
+                    "01/12/2010",
+                    "12/10/1899",
+                    "35/06/1891",
+                ]
             }
         )
         result = size_dataset(df_test)
@@ -95,9 +94,7 @@ class DataLoader(TestCase):
             {"annee": ["1951", "1951", "1951", "2004", "2010", "2010", "1899", "1891"]}
         )
         result = aggregate_by_year(df_test)
-        expected = pd.Series(
-            [3, 1, 2, 1, 1], index=[1951, 2004, 2010, 1899, 1891]
-        ).sort_index()
+        expected = pd.Series([3, 1, 2, 1, 1], index=[1951, 2004, 2010, 1899, 1891]).sort_index()
         assert result.sort_index().equals(expected)
 
     def test_should_aggregate_by_year_with_year_superior_to_0(self) -> None:
@@ -105,24 +102,23 @@ class DataLoader(TestCase):
             {"annee": ["1951", "1951", "1951", "0", "2010", "2010", "1899", "1891"]}
         )
         result = aggregate_by_year(df_test)
-        expected = pd.Series(
-            [3, 2, 1, 1], index=[1951, 2010, 1899, 1891]
-        ).sort_index()
+        expected = pd.Series([3, 2, 1, 1], index=[1951, 2010, 1899, 1891]).sort_index()
         assert result.sort_index().equals(expected)
 
     def test_multiple_aggregate_by_year(self) -> None:
-
         df_birth = pd.DataFrame({"annee": ["1951", "1951", "2004", "2010", "2010"]})
         df_death = pd.DataFrame({"annee": ["1951", "2004", "2004", "2010"]})
         df_wedding = pd.DataFrame({"annee": ["1951", "2004", "2010", "2010", "2010"]})
 
         result = multiple_aggregate_by_year(df_birth, df_death, df_wedding)
-        expected = pd.DataFrame({
-            "annee": [1951, 2004, 2010],
-            0: [2, 1, 2],  # naissances
-            1: [1, 2, 1],  # décès
-            2: [1, 1, 3]  # mariages
-        })
+        expected = pd.DataFrame(
+            {
+                "annee": [1951, 2004, 2010],
+                0: [2, 1, 2],  # naissances
+                1: [1, 2, 1],  # décès
+                2: [1, 1, 3],  # mariages
+            }
+        )
 
         result_sorted = result.sort_values("annee").reset_index(drop=True)
         expected_sorted = expected.sort_values("annee").reset_index(drop=True)
@@ -130,14 +126,11 @@ class DataLoader(TestCase):
         pd.testing.assert_frame_equal(result_sorted, expected_sorted, check_dtype=False)
 
     def test_aggregate_by_sex(self):
-        data = pd.DataFrame({
-            "sexe": ["H", "F", "H", "F", "F"]
-        })
+        data = pd.DataFrame({"sexe": ["H", "F", "H", "F", "F"]})
         result = aggregate_by_gender(data, "sexe")
 
         expected = pd.Series([2, 3], index=pd.Index(["H", "F"], name="genre"))
         pd.testing.assert_series_equal(result.sort_index(), expected.sort_index())
-
 
     def test_aggregate_by_sex_missing_column(self):
         data = pd.DataFrame({"age": [25, 30, 40]})
