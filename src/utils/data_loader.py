@@ -219,3 +219,32 @@ def average_death_age_by_year_and_genre(dt : pd.DataFrame) -> pd.DataFrame:
     raw_df["genre"] = raw_df["genre"].str.replace("_", "e")
     df = raw_df[["annee", "age_deces", "genre"]].copy()
     return df.groupby(["annee", "genre"])["age_deces"].mean().reset_index()
+
+def death_by_month(dt: pd.DataFrame) ->pd.DataFrame:
+    df = dt.copy()
+    df["date_deces"] = pd.to_datetime(df["date_deces"], errors="coerce")
+    df["mois"] = df["date_deces"].dt.month
+    return df
+
+
+def death_by_month_chart(dt: pd.DataFrame) -> pd.Series:
+    df = death_by_month(dt)
+
+    # S'assurer qu'on a bien des datetime
+    df["date_deces"] = pd.to_datetime(df["date_deces"], errors="coerce")
+    df["mois_num"] = df["date_deces"].dt.month
+
+    # Compter et forcer l'ordre 1 → 12
+    counts = df.groupby("mois_num").size().reindex(range(1, 13), fill_value=0)
+
+    # Mapping en français
+    mois_map = {
+        1: "Janvier", 2: "Février", 3: "Mars", 4: "Avril",
+        5: "Mai", 6: "Juin", 7: "Juillet", 8: "Août",
+        9: "Septembre", 10: "Octobre", 11: "Novembre", 12: "Décembre"
+    }
+    counts.index = [mois_map[m] for m in counts.index]
+
+    return counts
+
+

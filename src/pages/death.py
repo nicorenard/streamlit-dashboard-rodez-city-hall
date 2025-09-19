@@ -15,7 +15,7 @@ import streamlit_shadcn_ui as ui
 
 from src.utils import (dataset_load, aggregate_by_year, aggregate_by_gender_and_by_year,
                        top_and_down_death_year, average_death_age_by_year, death_age_histogram,
-                       average_death_age_by_year_and_genre)
+                       average_death_age_by_year_and_genre, death_by_season_month, death_by_month_chart)
 
 #data
 death_load = dataset_load("liste_des_deces.csv")
@@ -125,13 +125,33 @@ chart2 = alt.Chart(df_av2).mark_area(opacity=0.3).encode(
 
 st.altair_chart(chart2, use_container_width=True)
 
-#3. Analyse temporelle dans l’année
+st.write("""### 3. Analyses temporelle""")
 
 #Avec date_deces et heure_deces :
 
 #Décès par mois → saisonnalité (hiver/été).
+#Décès par mois
+st.write("""#### a. Analyses par mois sur la période complète""")
+df_plot = death_by_month_chart(death_load).reset_index()
+df_plot.columns = ["Mois", "Décès"]
+
+months = [
+    "Janvier","Février","Mars","Avril","Mai","Juin",
+    "Juillet","Août","Septembre","Octobre","Novembre","Décembre"
+]
+
+chart = alt.Chart(df_plot).mark_bar().encode(
+    x=alt.X("Mois:N", sort=months, title="Mois"),
+    y=alt.Y("Décès:Q", title="Nombre de décès"),
+    tooltip=["Mois", "Décès"]
+)
+
+st.altair_chart(chart, use_container_width=True)
+
+# deces par saisonnalité (hiver/été).
+
 #Décès par jour de la semaine
-#Décès par tranche horaire (matin / après-midi / nuit)?
+
 
 #4. Genre
 # Proportion des décès par genre chaque année.
