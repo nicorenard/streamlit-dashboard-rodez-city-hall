@@ -24,5 +24,5 @@ exploration = st.Page ("src/pages/temporal_exploration.py", title="Exploration g
 ad_analysis = st.Page("src/pages/advanced_analysis.py", title="Analyses Avancées", icon=":material/search_insights:")
 game = st.Page("src/pages/game.py", title="Let's play !", icon=":material/joystick:")
 
-pg = st.navigation([home,birth,death,wedding,exploration,ad_analysis,game])
+pg = st.navigation(pages=[home,birth,death,wedding,exploration,ad_analysis,game], position="top")
 pg.run()
