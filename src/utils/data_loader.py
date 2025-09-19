@@ -182,3 +182,16 @@ def top_or_down_birth(dataset: pd.DataFrame) -> Dict[str, Dict]:
             "lowest_year": {"year": int(lowest_male), "value": int(df.loc[lowest_male, "Masculin"])}
         }
     }
+
+
+def top_and_down_death_year(dataset: pd.DataFrame) -> Dict:
+    series = aggregate_by_year(dataset)
+
+    highest_year = series.idxmax()
+    lowest_year = series.idxmin()
+
+    return {
+        "highest_year": {"year": int(highest_year), "value": int(series.loc[highest_year])},
+        "lowest_year": {"year": int(lowest_year), "value": int(series.loc[lowest_year])}
+        }
+

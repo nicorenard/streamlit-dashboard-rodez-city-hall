@@ -13,6 +13,8 @@ import plotly.graph_objects as go
 import streamlit_shadcn_ui as ui
 
 from src.utils import dataset_load, aggregate_by_year, aggregate_birth_by_gender_and_by_year
+from src.utils import (dataset_load, aggregate_by_year, aggregate_birth_by_gender_and_by_year,
+                       top_and_down_death_year, average_death_age_by_year, death_age_histogram)
 
 #data
 death_load = dataset_load("liste_des_deces.csv")
@@ -61,13 +63,30 @@ for genre, color in zip(["Féminin", "Masculin"], ["#FF69B4", "#1f77b4"]):
 st.plotly_chart(fig, use_container_width=True)
 
 st.write("#### Note\n"
-         "La vue par genre n'est pas parfaite car beaucoup de lignes ne sont pas complète et la précision du genre est"
-         "plus visible vers les années 2000...")
          "La vue par genre n'est pas parfaite car beaucoup de lignes ne sont pas complète et la précision du genre est "
          "plus présente dans le relevé vers les années 2000...")
 
 st.markdown("""### 2. Quelques indicateurs """)
+
 # Année la plus haute / la plus basse en nombre de décès avec ui.metric_card.
+
+result = top_and_down_death_year(death_load)
+top, down = st.columns(2)
+
+with top:
+    ui.metric_card(
+        title="📊 Année la plus haute",
+        content=result["highest_year"]["year"],
+        description=f"{result['highest_year']['value']} décès"
+    )
+
+
+with down:
+    ui.metric_card(
+        title="📉 Année la plus basse",
+        content=result["lowest_year"]["year"],
+        description=f"{result['lowest_year']['value']} décès"
+    )
 
 st.write("""Espérance de vie moyenne par année""")
 #
