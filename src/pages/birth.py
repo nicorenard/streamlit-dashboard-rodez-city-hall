@@ -2,7 +2,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import streamlit_shadcn_ui as ui
 
-from src.utils import (dataset_load, aggregate_birth_by_gender_and_by_year, top_or_down_birth,
+from src.utils import (dataset_load, aggregate_by_gender_and_by_year, top_or_down_birth,
                        top_name_by_year_and_gender, aggregate_by_year, top_name_by_genre, find_name_query, name_vs_name)
 
 
@@ -32,7 +32,7 @@ with st.container():
     st.bar_chart(df, x_label="Années", y_label="Nombre de naissances total")
 
 st.markdown("""#### b. Vue par genres""")
-dfg = aggregate_birth_by_gender_and_by_year(birth_load).reset_index()
+dfg = aggregate_by_gender_and_by_year(birth_load).reset_index()
 
 fig = go.Figure()
 for genre, color in zip(["Féminin", "Masculin"], ["#FF69B4", "#1f77b4"]):

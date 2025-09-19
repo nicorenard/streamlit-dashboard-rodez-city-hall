@@ -13,8 +13,9 @@ import altair as alt
 import plotly.graph_objects as go
 import streamlit_shadcn_ui as ui
 
-from src.utils import (dataset_load, aggregate_by_year, aggregate_birth_by_gender_and_by_year,
-                       top_and_down_death_year, average_death_age_by_year, death_age_histogram)
+from src.utils import (dataset_load, aggregate_by_year, aggregate_by_gender_and_by_year,
+                       top_and_down_death_year, average_death_age_by_year, death_age_histogram,
+                       average_death_age_by_year_and_genre)
 
 #data
 death_load = dataset_load("liste_des_deces.csv")
@@ -31,8 +32,6 @@ st.write("Le dataset des décès est très léger en terme de richesse des donn�
          "3) D'avoir une focus sur certains indicateurs comme les centenaires par exemple")
 
 st.divider()
-## exploration temporelle
-# timeline des deces + repartition homme/femme
 st.markdown("""### 1. Timelines""")
 
 st.markdown("""#### a. Vue générale""")
@@ -47,7 +46,7 @@ st.write("#### Note\n"
          "pourra expliquer cette tendance à la hausse si la population vieillissante n'est pas renouvelée...")
 
 st.markdown("""#### b. Vue par genres""")
-dfg = aggregate_birth_by_gender_and_by_year(death_load).reset_index()
+dfg = aggregate_by_gender_and_by_year(death_load).reset_index()
 
 fig = go.Figure()
 for genre, color in zip(["Féminin", "Masculin"], ["#FF69B4", "#1f77b4"]):
@@ -65,7 +64,7 @@ st.plotly_chart(fig, use_container_width=True)
 st.write("#### Note\n"
          "La vue par genre n'est pas parfaite car beaucoup de lignes ne sont pas complète et la précision du genre est "
          "plus présente dans le relevé vers les années 2000...")
-
+st.divider()
 st.markdown("""### 2. Quelques indicateurs """)
 
 result = top_and_down_death_year(death_load)
@@ -92,21 +91,23 @@ st.info("""##### Note
 Les données ici ne prennent pas en compte que les lignes complètes avec date de décès et de naissances!""")
 
 
-year_range = st.slider(label="Période à selectionner", min_value=1981, max_value=2016, value=(1981, 2016))
+year_range = st.slider(label="Période à sélectionner", min_value=1981, max_value=2016, value=(1981, 2016))
 histo = death_age_histogram(death_load, 20, year_range)
 st.bar_chart(histo)
 
 st.write("""#### b. Espérance de vie moyenne par année""")
 
-df = average_death_age_by_year(death_load).reset_index()
-df.columns = ["annee", "age_deces_moyen"]
+df_av1 = average_death_age_by_year(death_load).reset_index()
+df_av1.columns = ["annee", "age_deces_moyen"]
 
-chart = alt.Chart(df).mark_area(opacity=0.3).encode(
-    x=alt.X("annee:O", title="Années"),  # ':O' force l'axe comme ordinal
+chart1 = alt.Chart(df_av1).mark_area(opacity=0.3).encode(
+    x=alt.X("annee:O", title="Années"),
     y=alt.Y("age_deces_moyen:Q", title="Âges moyen des décès")
 )
 
-st.altair_chart(chart, use_container_width=True)
+st.altair_chart(chart1, use_container_width=True)
+
+st.write("""#### c. Espérance de vie moyenne par année et par genre""")
 
 
 #

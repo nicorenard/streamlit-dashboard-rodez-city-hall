@@ -132,7 +132,7 @@ def name_vs_name(dataset: pd.DataFrame, name1:str, name2: str) -> Dict[str, str]
         "winner": winner
     }
 
-def aggregate_birth_by_gender_and_by_year(dataset: pd.DataFrame) -> pd.DataFrame:
+def aggregate_by_gender_and_by_year(dataset: pd.DataFrame) -> pd.DataFrame:
     dataset["annee"] = pd.to_numeric(dataset["annee"], errors="coerce", downcast='integer')
     dataset_valid = dataset[dataset["annee"] > 0]
     df = dataset_valid.groupby(["annee", "genre"]).size().reset_index(name="count")
@@ -145,7 +145,7 @@ def top_or_down_birth(dataset: pd.DataFrame) -> Dict[str, Dict]:
     - highest and lowest year (all genders combined)
     - highest and lowest year by gender
     """
-    df = aggregate_birth_by_gender_and_by_year(dataset)
+    df = aggregate_by_gender_and_by_year(dataset)
     df["total"] = df.sum(axis=1)
 
     highest_year = df["total"].idxmax()
@@ -211,5 +211,5 @@ def death_age_histogram(dt: pd.DataFrame, bins: int= 20, year_range = None) -> p
     histogram.index = [
         f"{int(interval.left)}-{int(interval.right)}"
         for interval in histogram.index
-    ] # value are not float
+    ] # value are not float bug fix
     return histogram
