@@ -127,10 +127,6 @@ st.altair_chart(chart2, use_container_width=True)
 
 st.write("""### 3. Analyses temporelle""")
 
-#Avec date_deces et heure_deces :
-
-#Décès par mois → saisonnalité (hiver/été).
-#Décès par mois
 st.write("""#### a. Analyses par mois sur la période complète""")
 df_plot = death_by_month_chart(death_load).reset_index()
 df_plot.columns = ["Mois", "Décès"]
@@ -149,6 +145,33 @@ chart = alt.Chart(df_plot).mark_bar().encode(
 st.altair_chart(chart, use_container_width=True)
 
 # deces par saisonnalité (hiver/été).
+st.write("""#### b. Analyses par saison sur la période complète""")
+
+df_season = death_by_season_month(death_load)
+
+# radar chart
+fig = go.Figure()
+
+fig.add_trace(go.Scatterpolar(
+    r=df_season.values,
+    theta=df_season.index,
+    fill='toself',
+    name='Décès par saison',
+    line_color='red'
+))
+
+fig.update_layout(
+    polar=dict(
+        radialaxis=dict(
+            visible=True,
+            range=[0, df_season.values.max() * 1.1]  # un peu de marge
+        )
+    ),
+    showlegend=True,
+    title="Décès par saison"
+)
+
+st.plotly_chart(fig, use_container_width=True)
 
 #Décès par jour de la semaine
 

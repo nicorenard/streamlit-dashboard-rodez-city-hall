@@ -248,3 +248,32 @@ def death_by_month_chart(dt: pd.DataFrame) -> pd.Series:
     return counts
 
 
+
+def death_by_season_month(dt: pd.DataFrame) ->pd.Series:
+    df = death_by_month(dt)
+    df["saison"] = df["mois"].map({
+        12:"Hiver",
+        1:"Hiver",
+        2:"Hiver",
+        3:"Printemps",
+        4:"Printemps",
+        5:"Printemps",
+        6:"Ete",
+        7: "Ete",
+        8: "Ete",
+        9: "Automne",
+        10: "Automne",
+        11: "Automne",
+    })
+    seasons = ["Hiver","Printemps","Ete","Automne"]
+    df_season = df.groupby("saison").size().reindex(seasons)
+    return df_season
+
+
+def death_by_day(dt: pd.DataFrame) ->pd.Series:
+    df = dt.copy()
+    df["date_deces"] = pd.to_datetime(df["date_deces"], errors="coerce")
+    df["jours"] = df["date_deces"].dt.day_name()
+    days = ["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"]
+    death_d_df = df.groupby("jours").size().reindex(days)
+    return death_d_df
