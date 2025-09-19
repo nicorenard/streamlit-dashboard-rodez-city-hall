@@ -86,6 +86,8 @@ with down:
         description=f"{result['lowest_year']['value']} décès"
     )
 
+st.markdown("""### 3. Analyses de moyennes """)
+
 st.write("""#### a. Histogramme de l'age moyen du décès""")
 
 st.info("""##### Note
@@ -126,7 +128,8 @@ chart2 = alt.Chart(df_av2).mark_area(opacity=0.3).encode(
 
 st.altair_chart(chart2, use_container_width=True)
 
-st.write("""### 3. Analyses temporelle""")
+st.divider()
+st.write("""### 4. Analyses temporelle""")
 
 st.write("""#### a. Analyses par mois sur la période complète""")
 df_plot = death_by_month_chart(death_load).reset_index()
@@ -145,7 +148,7 @@ chart = alt.Chart(df_plot).mark_bar().encode(
 
 st.altair_chart(chart, use_container_width=True)
 
-# deces par saisonnalité (hiver/été).
+
 st.write("""#### b. Analyses par saison sur la période complète""")
 
 df_season = death_by_season_month(death_load)
@@ -153,7 +156,7 @@ df_season = death_by_season_month(death_load)
 df_plot1 = df_season.reset_index()
 df_plot1.columns = ["Catégorie", "Décès"]
 
-# Color scale simple
+
 chart = alt.Chart(df_plot1).mark_bar().encode(
     x=alt.X("Catégorie:N", sort=df_plot1.index.tolist(), title=""),
     y=alt.Y("Décès:Q", title="Nombre de décès"),
@@ -167,7 +170,7 @@ chart = alt.Chart(df_plot1).mark_bar().encode(
 
 st.altair_chart(chart, use_container_width=True)
 
-#Décès par jour de la semaine
+
 st.write("""#### c. Analyses par jours sur la période complète""")
 
 df_days = death_by_day(death_load)
@@ -176,9 +179,8 @@ df_plot3.columns = ["Jour", "Décès"]
 
 days_order = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"]
 
-# Créer le line chart
 chart3 = alt.Chart(df_plot3).mark_line(point=True, color="steelblue").encode(
-    x=alt.X("Jour:N", sort=days_order, title="Jour de la semaine"),
+    x=alt.X("Jour:N", sort=days_order, title="Jours de la semaine"),
     y=alt.Y("Décès:Q", title="Nombre de décès"),
     tooltip=["Jour", "Décès"]
 ).properties(
@@ -188,11 +190,3 @@ chart3 = alt.Chart(df_plot3).mark_line(point=True, color="steelblue").encode(
 )
 
 st.altair_chart(chart3, use_container_width=True)
-
-#4. Genre
-# Proportion des décès par genre chaque année.
-# Espérance de vie hommes vs femmes.
-
-# 5. Comparatifs
-# Comparaison de l’âge moyen au décès sur différentes périodes (ex. avant 1950 vs après 2000).
-
