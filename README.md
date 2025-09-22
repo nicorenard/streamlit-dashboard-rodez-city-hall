@@ -48,5 +48,5 @@ L'application est disponible sur le cloud sur l'hébergeur "streamlit cloud" :
 
 ### Ressources
 
-* https://cheat-sheets.streamlit.app/
-
+* https://cheat-sheets.streamlit.app/ -> super cheat-sheet
+* https://editcolor.streamlit.app/ -> theme
