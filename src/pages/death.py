@@ -7,7 +7,7 @@ from src.utils import (
     dataset_load,
     aggregate_by_year,
     aggregate_by_gender_and_by_year,
-    top_and_down_death_year,
+    top_year_and_down_year,
     average_death_age_by_year,
     death_age_histogram,
     average_death_age_by_year_and_genre,
@@ -74,7 +74,7 @@ st.write(
 st.divider()
 st.markdown("""### 2. Quelques indicateurs """)
 
-result = top_and_down_death_year(death_load)
+result = top_year_and_down_year(death_load)
 top, down = st.columns(2)
 
 with top:
