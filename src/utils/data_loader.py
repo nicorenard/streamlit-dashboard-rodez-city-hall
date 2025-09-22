@@ -338,3 +338,59 @@ def death_by_day(dt: pd.DataFrame) -> pd.Series:
     death_d_df.index = [jours_map[j] for j in death_d_df.index]
 
     return death_d_df
+
+
+def wedding_by_month_chart(dt: pd.DataFrame) -> pd.Series:
+    df = dt.copy()
+    df["date_exacte_mariage"] = pd.to_datetime(df["date_exacte_mariage"], errors="coerce")
+    df["mois_num"] = df["date_exacte_mariage"].dt.month
+
+    counts = df.groupby("mois_num").size().reindex(range(1, 13), fill_value=0)
+
+    mois_map = {
+        1: "Janvier",
+        2: "Février",
+        3: "Mars",
+        4: "Avril",
+        5: "Mai",
+        6: "Juin",
+        7: "Juillet",
+        8: "Août",
+        9: "Septembre",
+        10: "Octobre",
+        11: "Novembre",
+        12: "Décembre",
+    }
+    counts.index = [mois_map[m] for m in counts.index]
+
+    return counts
+
+
+def _wedding_by_month(dt: DataFrame) -> pd.DataFrame:
+    df = dt.copy()
+    df["date_exacte_mariage"] = pd.to_datetime(df["date_exacte_mariage"], errors="coerce")
+    df["mois"] = df["date_exacte_mariage"].dt.month
+    return df
+
+
+def weeding_by_season_month(dt: pd.DataFrame) -> pd.DataFrame:
+    df = _wedding_by_month(dt)
+    df["saison"] = df["mois"].map(
+        {
+            12: "Hiver",
+            1: "Hiver",
+            2: "Hiver",
+            3: "Printemps",
+            4: "Printemps",
+            5: "Printemps",
+            6: "Ete",
+            7: "Ete",
+            8: "Ete",
+            9: "Automne",
+            10: "Automne",
+            11: "Automne",
+        }
+    )
+    seasons = ["Hiver", "Printemps", "Ete", "Automne"]
+    pivot = pd.crosstab(df["saison"], df["annee"]).reindex(seasons)
+    return pivot
