@@ -207,7 +207,7 @@ def top_or_down_birth(dataset: pd.DataFrame) -> Dict[str, Dict]:
     }
 
 
-def top_and_down_death_year(dataset: pd.DataFrame) -> Dict:
+def top_year_and_down_year(dataset: pd.DataFrame) -> Dict:
     series = aggregate_by_year(dataset)
 
     highest_year = series.idxmax()

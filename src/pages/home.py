@@ -60,10 +60,16 @@ timeline = multiple_aggregate_by_year(birth_load, death_load, wedding_load).rena
     columns={0: "Naissances", 1: "Décès", 2: "Mariages"}
 )
 with st.container():
-    st.line_chart(timeline, color=["#1CAEED", "#000000", "#ED1C6E"], x="annee", x_label="Années")
+    st.line_chart(
+        timeline,
+        color=["#1CAEED", "#000000", "#ED1C6E"],
+        x="annee",
+        x_label="Années",
+        y_label="Nombres",
+    )
 
     st.write(
-        "Cette timeline permet rapidement d'avoir un coup d'oeil sur les périodes importante des dernière décennies. "
+        "Cette timeline permet rapidement d'avoir un coup d'oeil sur les périodes importantes des dernières décennies. "
         "\n"
         "1) 1ère guerre mondiale 1914-1918 avec un pic 1918\n"
         "2) 2ème guerre  mondiale 1939-1944 avec deux pics de décès en 1940 et 1944\n"

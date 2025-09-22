@@ -12,7 +12,7 @@ from .data_loader import (
     top_name_by_year_and_gender,
     find_name_query,
     name_vs_name,
-    top_and_down_death_year,
+    top_year_and_down_year,
     average_death_age_by_year,
     death_age_histogram,
     average_death_age_by_year_and_genre,

@@ -9,6 +9,7 @@ dependencies = [
     "plotly>=6.3.0",
     "pre-commit>=4.3.0",
     "ruff>=0.12.12",
+    "seaborn>=0.13.2",
     "streamlit>=1.49.1",
     "streamlit-shadcn-ui>=0.1.18",
 ]
