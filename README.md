@@ -50,3 +50,4 @@ L'application est disponible sur le cloud sur l'hébergeur "streamlit cloud" :
 
 * https://cheat-sheets.streamlit.app/ -> super cheat-sheet
 * https://editcolor.streamlit.app/ -> theme
+* https://github.com/amueller/word_cloud ->librairie wordcloud, nuage de mots

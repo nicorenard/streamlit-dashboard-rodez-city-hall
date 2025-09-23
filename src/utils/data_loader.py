@@ -1,9 +1,8 @@
 from typing import Dict
 import pandas as pd
 from pathlib import Path
-
 from pandas import DataFrame
-
+from wordcloud import WordCloud
 from .data_loader_rules import is_lower, is_csv
 
 
@@ -423,3 +422,19 @@ def wedding_type_gender(dt: pd.DataFrame) -> pd.DataFrame:
     df_type_couple = percentages.unstack(fill_value=0).reset_index()
 
     return df_type_couple
+
+
+def wordcloud_jobs(dt: pd.DataFrame, column_name: str) -> WordCloud:
+    df = dt.copy()
+    df = df[["annee", column_name]].dropna()
+    df[column_name] = df[column_name].astype(str).str.strip().str.replace("_", "e")
+    df_filtered = df[df["annee"] >= 1999]
+    text = " ".join(df_filtered[column_name].tolist())
+
+    wordcloud = WordCloud(
+        width=800,
+        height=400,
+        background_color="#fff7f7",
+        colormap="viridis",
+    ).generate(text)
+    return wordcloud

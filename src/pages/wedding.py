@@ -19,6 +19,7 @@ from src.utils import (
     wedding_by_month_chart,
     wedding_by_season_month,
     wedding_type_gender,
+    wordcloud_jobs,
 )
 
 # data
@@ -148,7 +149,6 @@ fig.add_trace(
         marker_color="blue",
     )
 )
-
 # Couples LGBT
 fig.add_trace(
     go.Bar(
@@ -169,7 +169,24 @@ fig.update_layout(
 )
 
 st.plotly_chart(fig)
-# profession dans un tables ou un nuage de mot ?
+st.markdown("""#### b. Nuage de mots des professions""")
+
+job_epoux, job_epouse = st.columns(2)
+
+wc = wordcloud_jobs(wedding_set, "profession_epoux")
+fig_wc, axis_wc = plt.subplots(figsize=(10, 5))
+axis_wc.imshow(wc, interpolation="bilinear")
+axis_wc.axis("off")
+job_epoux.pyplot(fig_wc)
+job_epoux.write("Profession des 'époux'")
+
+wc2 = wordcloud_jobs(wedding_set, "profession_epouse")
+fig_wc2, axis_wc2 = plt.subplots(figsize=(10, 5))
+axis_wc2.imshow(wc2, interpolation="bilinear")
+axis_wc2.axis("off")
+job_epouse.pyplot(fig_wc2)
+job_epouse.write("Profession des 'épouses'")
+
 st.divider()
 st.markdown("""### 4. Quelques indicateurs optionnels""")
 

@@ -22,4 +22,5 @@ from .data_loader import (
     wedding_by_month_chart,
     wedding_by_season_month,
     wedding_type_gender,
+    wordcloud_jobs,
 )
