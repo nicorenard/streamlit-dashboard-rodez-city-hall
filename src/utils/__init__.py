@@ -20,5 +20,6 @@ from .data_loader import (
     death_by_day,
     death_by_month_chart,
     wedding_by_month_chart,
-    weeding_by_season_month,
+    wedding_by_season_month,
+    wedding_type_gender,
 )

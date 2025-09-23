@@ -373,7 +373,7 @@ def _wedding_by_month(dt: DataFrame) -> pd.DataFrame:
     return df
 
 
-def weeding_by_season_month(dt: pd.DataFrame) -> pd.DataFrame:
+def wedding_by_season_month(dt: pd.DataFrame) -> pd.DataFrame:
     df = _wedding_by_month(dt)
     df["saison"] = df["mois"].map(
         {
@@ -394,3 +394,32 @@ def weeding_by_season_month(dt: pd.DataFrame) -> pd.DataFrame:
     seasons = ["Hiver", "Printemps", "Ete", "Automne"]
     pivot = pd.crosstab(df["saison"], df["annee"]).reindex(seasons)
     return pivot
+
+
+def _classify_couple(row):
+    if row["genre_epoux"].lower() == "masculin" and row["genre_epouse"].lower() == "feminin":
+        return "hetero"
+    elif row["genre_epoux"].lower() == "feminin" and row["genre_epouse"].lower() == "masculin":
+        return "hetero"
+    elif row["genre_epoux"].lower() == "masculin" and row["genre_epouse"].lower() == "masculin":
+        return "lgbt"
+    elif row["genre_epoux"].lower() == "feminin" and row["genre_epouse"].lower() == "feminin":
+        return "lgbt"
+    else:
+        return "inconnu"
+
+
+def wedding_type_gender(dt: pd.DataFrame) -> pd.DataFrame:
+    df = dt.copy()
+    df["genre_epoux"] = df["genre_epoux"].astype(str).str.strip().str.lower().str.replace("_", "e")
+    df["genre_epouse"] = (
+        df["genre_epouse"].astype(str).str.strip().str.lower().str.replace("_", "e")
+    )
+    df["type_couple"] = df.apply(_classify_couple, axis=1)  # we classify gender couple
+    df = df[df["annee"] > 0]
+    counts = df.groupby(["annee", "type_couple"]).size()
+    totals = df.groupby("annee").size()
+    percentages = (counts / totals * 100).round(2)
+    df_type_couple = percentages.unstack(fill_value=0).reset_index()
+
+    return df_type_couple
