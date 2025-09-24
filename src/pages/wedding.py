@@ -20,6 +20,7 @@ from src.utils import (
     wedding_by_season_month,
     wedding_type_gender,
     wordcloud_jobs,
+    average_wedding_age,
 )
 
 # data
@@ -42,7 +43,7 @@ top, down = st.columns(2)
 
 with top:
     ui.metric_card(
-        title=" Année la plus haute",
+        title=" 💐 Année la plus haute",
         content=df["highest_year"]["year"],
         description=f"{df['highest_year']['value']} marriages",
     )
@@ -50,7 +51,7 @@ with top:
 
 with down:
     ui.metric_card(
-        title=" Année la plus basse",
+        title="🤍Année la plus basse",
         content=df["lowest_year"]["year"],
         description=f"{df['lowest_year']['value']} décès",
     )
@@ -102,7 +103,7 @@ st.altair_chart(chart, use_container_width=True)
 st.markdown("""#### b.Heatmap des mariages par saison et par année""")
 df_season = wedding_by_season_month(wedding_set)
 
-fig, axis = plt.subplots(figsize=(10, 5))
+figure, axis = plt.subplots(figsize=(10, 5))
 sns.heatmap(
     df_season,
     annot=False,  # pas de label de chiffre
@@ -114,17 +115,17 @@ sns.heatmap(
 axis.set_title("Nombre de mariages par saison et année")
 axis.set_xlabel("Années")
 axis.set_ylabel("Saison")
-st.pyplot(fig)
+st.pyplot(figure)
 
 
 st.divider()
 
-st.info("""On notera ici que les données étant pauvres, elles représentent environ ~10% du dataset et donc 
-l'analyse ne peut être étendu sur la période complete.""")
+st.info("""On notera ici que les analyses suivants portent sur des données plutôt pauvres, elles représentent 
+environ ~10% du dataset et donc l'analyse ne peut être étendue sur la période complete.""")
 
 st.markdown("""### 3. Dimensions démographique""")
 st.markdown(
-    """#### a. Histogramme du dénombrement des types de couples pour les années post 2010"""
+    """#### a. Histogramme du dénombrement des types de couples pour les années post années 2010"""
 )
 
 
@@ -192,5 +193,37 @@ st.markdown("""### 4. Quelques indicateurs optionnels""")
 
 
 # age moyen au mariage ( homme versus femme)
+avg_age = average_wedding_age(wedding_set)
+fig_avg_age = go.Figure()
+
+# epoux
+fig_avg_age.add_trace(
+    go.Bar(
+        x=avg_age["annee"],
+        y=avg_age["age_moyen_epoux"],
+        name="Age moyen des 'époux'",
+        marker_color="blue",
+    )
+)
+# epouse
+fig_avg_age.add_trace(
+    go.Bar(
+        x=avg_age["annee"],
+        y=avg_age["age_moyen_epouse"],
+        name="Age moyen des 'épouses'",
+        marker_color="pink",
+    )
+)
+
+# Mise en forme
+fig_avg_age.update_layout(
+    barmode="group",
+    title="Évolution de l'age moyen au mariages en fonction des époux/épouses",
+    xaxis_title="Années",
+    yaxis_title="Age moyen",
+    template="plotly_white",
+)
+
+st.plotly_chart(fig_avg_age)
 # histogramme des ages H/F
 # distribution des écarts d'age entre conjoints

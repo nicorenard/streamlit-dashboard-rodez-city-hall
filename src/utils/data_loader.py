@@ -438,3 +438,30 @@ def wordcloud_jobs(dt: pd.DataFrame, column_name: str) -> WordCloud:
         colormap="viridis",
     ).generate(text)
     return wordcloud
+
+
+def average_wedding_age(dt: pd.DataFrame) -> pd.DataFrame:
+    df = dt.copy()
+
+    df["date_naissance_epoux"] = pd.to_datetime(
+        df["date_naissance_epoux"], errors="coerce", dayfirst=True
+    )
+    df["date_naissance_epouse"] = pd.to_datetime(
+        df["date_naissance_epouse"], errors="coerce", dayfirst=True
+    )
+    df["date_exacte_mariage"] = pd.to_datetime(
+        df["date_exacte_mariage"], errors="coerce", dayfirst=True
+    )
+
+    df["age_moyen_epoux"] = (df["date_exacte_mariage"] - df["date_naissance_epoux"]).dt.days // 365
+    df["age_moyen_epouse"] = (
+        df["date_exacte_mariage"] - df["date_naissance_epouse"]
+    ).dt.days // 365
+
+    df = df[df["age_moyen_epoux"].notna() & (df["age_moyen_epoux"] > 0)]
+    df = df[df["age_moyen_epouse"].notna() & (df["age_moyen_epouse"] > 0)]
+
+    df_avg = df.groupby("annee")[["age_moyen_epoux", "age_moyen_epouse"]].mean().reset_index()
+    df_avg = df_avg[df_avg["annee"] > 0]
+
+    return df_avg
