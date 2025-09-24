@@ -440,7 +440,7 @@ def wordcloud_jobs(dt: pd.DataFrame, column_name: str) -> WordCloud:
     return wordcloud
 
 
-def average_wedding_age(dt: pd.DataFrame) -> pd.DataFrame:
+def wedding_age(dt: pd.DataFrame) -> pd.DataFrame:
     df = dt.copy()
 
     df["date_naissance_epoux"] = pd.to_datetime(
@@ -458,10 +458,21 @@ def average_wedding_age(dt: pd.DataFrame) -> pd.DataFrame:
         df["date_exacte_mariage"] - df["date_naissance_epouse"]
     ).dt.days // 365
 
-    df = df[df["age_moyen_epoux"].notna() & (df["age_moyen_epoux"] > 0)]
-    df = df[df["age_moyen_epouse"].notna() & (df["age_moyen_epouse"] > 0)]
+    df = df[(df["age_moyen_epoux"] > 0) & (df["age_moyen_epouse"] > 0)]
+    return df
 
+
+def average_wedding_age(dt: pd.DataFrame) -> pd.DataFrame:
+    df = wedding_age(dt)
     df_avg = df.groupby("annee")[["age_moyen_epoux", "age_moyen_epouse"]].mean().reset_index()
     df_avg = df_avg[df_avg["annee"] > 0]
-
     return df_avg
+
+
+def average_age_wedding_by_gender(dt: pd.DataFrame) -> pd.DataFrame:
+    df = wedding_age(dt)
+    counts_epoux = df["age_moyen_epoux"].value_counts().sort_index()
+    counts_epouse = df["age_moyen_epouse"].value_counts().sort_index()
+    return (
+        pd.DataFrame({"Âge époux": counts_epoux, "Âge épouse": counts_epouse}).fillna(0).astype(int)
+    )

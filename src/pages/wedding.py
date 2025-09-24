@@ -12,6 +12,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
+
 from src.utils import (
     dataset_load,
     aggregate_by_year,
@@ -21,6 +22,7 @@ from src.utils import (
     wedding_type_gender,
     wordcloud_jobs,
     average_wedding_age,
+    average_age_wedding_by_gender,
 )
 
 # data
@@ -57,7 +59,7 @@ with down:
     )
 
 
-st.markdown("""#### b. Timeline globale sur la période 1981-2016""")
+st.markdown("""#### b. Vue globale sur le dataset""")
 df2 = aggregate_by_year(wedding_set)
 with st.container():
     st.bar_chart(df2, x_label="Années", y_label="Nombre de mariages total")
@@ -65,9 +67,6 @@ with st.container():
 st.divider()
 st.markdown("""### 2. Répartitions temporelles""")
 
-st.write(
-    """ L'analyse de ces données est très utile quand à la saisonnalité des mariages sur la période au complet"""
-)
 
 st.markdown("""#### a. Histogramme des mariages par mois entre 1981-2016""")
 df_plot = wedding_by_month_chart(wedding_set).reset_index()
@@ -129,9 +128,9 @@ st.markdown(
 )
 
 
-st.write("""##### Note
-On prendra une référence proche de 2013 car à cette date, la loi du mariage pour tous à été promue et donc officiellement
-, on peut relever une apparition de ce type de données concernant le mariage de couples LGBT""")
+st.write(""" Cette analyse ne prend en compte qu'une référence proche de 2013 car à cette date, en France, la loi du 
+'mariage pour tous' à été promue. Officiellement donc, les couples LGBT sont autorisés à se marier. On peut relever 
+une apparition de ce type de données concernant les mariages de couples LGBT""")
 
 type_gender = wedding_type_gender(wedding_set)
 if "inconnu" in type_gender.columns:
@@ -159,7 +158,6 @@ fig.add_trace(
         marker_color="purple",
     )
 )
-
 # Mise en forme
 fig.update_layout(
     barmode="group",
@@ -171,7 +169,10 @@ fig.update_layout(
 
 st.plotly_chart(fig)
 st.markdown("""#### b. Nuage de mots des professions""")
-
+st.write(
+    "Les professions sont présentes une partie du dataset et permet ici de les présenter sous une forme"
+    "moins analytique et conventionnel comme un nuage de mot."
+)
 job_epoux, job_epouse = st.columns(2)
 
 wc = wordcloud_jobs(wedding_set, "profession_epoux")
@@ -191,8 +192,8 @@ job_epouse.write("Profession des 'épouses'")
 st.divider()
 st.markdown("""### 4. Quelques indicateurs optionnels""")
 
-
 # age moyen au mariage ( homme versus femme)
+st.markdown("""#### a. Âge moyen par catégorie époux/épouse entre 1981-2016""")
 avg_age = average_wedding_age(wedding_set)
 fig_avg_age = go.Figure()
 
@@ -214,16 +215,43 @@ fig_avg_age.add_trace(
         marker_color="pink",
     )
 )
-
 # Mise en forme
 fig_avg_age.update_layout(
     barmode="group",
-    title="Évolution de l'age moyen au mariages en fonction des époux/épouses",
+    title="Évolution de l'age moyen des époux/épouses entre 1981-2016",
     xaxis_title="Années",
-    yaxis_title="Age moyen",
+    yaxis_title="Ages moyen",
     template="plotly_white",
 )
 
 st.plotly_chart(fig_avg_age)
-# histogramme des ages H/F
+
+st.markdown("""#### b. Âge moyen par catégorie époux/épouse""")
+
+age_counts = average_age_wedding_by_gender(wedding_set)
+age_counts = (
+    age_counts.reset_index()
+    .melt(
+        id_vars="index",
+        value_vars=["Âge époux", "Âge épouse"],
+        var_name="Genre",
+        value_name="Nombre",
+    )
+    .rename(columns={"index": "Âge"})
+)
+
+# Bar chart côte à côte
+chart = (
+    alt.Chart(age_counts)
+    .mark_bar()
+    .encode(
+        x=alt.X("Âge:O", title="Âge au mariage"),
+        y=alt.Y("Nombre:Q", title="Nombre de personnes"),
+        color=alt.Color("Genre:N", scale=alt.Scale(scheme="set1")),
+        xOffset="Genre:N",  # Sépare les barres côte à côte
+    )
+)
+
+st.altair_chart(chart, use_container_width=True)
+
 # distribution des écarts d'age entre conjoints
