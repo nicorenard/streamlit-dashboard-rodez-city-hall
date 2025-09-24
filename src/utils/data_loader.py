@@ -476,3 +476,25 @@ def average_age_wedding_by_gender(dt: pd.DataFrame) -> pd.DataFrame:
     return (
         pd.DataFrame({"Âge époux": counts_epoux, "Âge épouse": counts_epouse}).fillna(0).astype(int)
     )
+
+
+def age_gap_between_spouses(dt: pd.DataFrame) -> pd.DataFrame:
+    df = wedding_age(dt)
+    df["ecart_age"] = df["age_moyen_epoux"] - df["age_moyen_epouse"]
+    df["ecart_age_absolu"] = df["ecart_age"].abs()
+    age_grp = (
+        df.groupby("annee")
+        .agg(ecart_moyen=("ecart_age_absolu", "mean"), ecart_median=("ecart_age_absolu", "median"))
+        .reset_index()
+    )
+    age_gap_long = pd.melt(
+        age_grp,
+        id_vars=["annee"],
+        value_vars=["ecart_moyen", "ecart_median"],
+        var_name="ecart_type",
+        value_name="valeur",
+    )
+    age_gap_long["ecart_type"] = age_gap_long["ecart_type"].map(
+        {"ecart_moyen": "Moyenne", "ecart_median": "Médiane"}
+    )
+    return age_gap_long

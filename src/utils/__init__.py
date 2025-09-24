@@ -25,4 +25,5 @@ from .data_loader import (
     wordcloud_jobs,
     average_wedding_age,
     average_age_wedding_by_gender,
+    age_gap_between_spouses,
 )

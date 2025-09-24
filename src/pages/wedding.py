@@ -12,7 +12,6 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
-
 from src.utils import (
     dataset_load,
     aggregate_by_year,
@@ -23,6 +22,7 @@ from src.utils import (
     wordcloud_jobs,
     average_wedding_age,
     average_age_wedding_by_gender,
+    age_gap_between_spouses,
 )
 
 # data
@@ -193,7 +193,7 @@ st.divider()
 st.markdown("""### 4. Quelques indicateurs optionnels""")
 
 # age moyen au mariage ( homme versus femme)
-st.markdown("""#### a. Âge moyen par catégorie époux/épouse entre 1981-2016""")
+st.markdown("""#### a. Évolution de l'âge moyen des époux/épouses entre 1981-2016""")
 avg_age = average_wedding_age(wedding_set)
 fig_avg_age = go.Figure()
 
@@ -218,7 +218,6 @@ fig_avg_age.add_trace(
 # Mise en forme
 fig_avg_age.update_layout(
     barmode="group",
-    title="Évolution de l'age moyen des époux/épouses entre 1981-2016",
     xaxis_title="Années",
     yaxis_title="Ages moyen",
     template="plotly_white",
@@ -226,7 +225,7 @@ fig_avg_age.update_layout(
 
 st.plotly_chart(fig_avg_age)
 
-st.markdown("""#### b. Âge moyen par catégorie époux/épouse""")
+st.markdown("""#### b. Evolution de l'âge moyen par des époux/épouses""")
 
 age_counts = average_age_wedding_by_gender(wedding_set)
 age_counts = (
@@ -241,7 +240,7 @@ age_counts = (
 )
 
 # Bar chart côte à côte
-chart = (
+age_counts_chart = (
     alt.Chart(age_counts)
     .mark_bar()
     .encode(
@@ -252,6 +251,21 @@ chart = (
     )
 )
 
-st.altair_chart(chart, use_container_width=True)
+st.altair_chart(age_counts_chart, use_container_width=True)
+
+st.markdown("""#### c. Écart d’âge absolu moyen et médian des couples par année""")
 
 # distribution des écarts d'age entre conjoints
+age_gap = age_gap_between_spouses(wedding_set)
+age_gap_chart = (
+    alt.Chart(age_gap)
+    .mark_line(point=True)
+    .encode(
+        x=alt.X("annee:O", title="Années"),
+        y=alt.Y("valeur:Q", title="Écart d’âge en années"),
+        color=alt.Color("ecart_type:N", title="Statistique"),
+        tooltip=["annee", "ecart_type", "valeur"],
+    )
+    .properties(width=700, height=400)
+)
+st.altair_chart(age_gap_chart, use_container_width=True)
