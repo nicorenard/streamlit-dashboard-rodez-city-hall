@@ -34,7 +34,7 @@ logo = left.image(image="src/assets/rodez_logo_propre.png", width=150)
 right.title("Statistique et exploration des mariages")
 
 st.write("""Le dataset des mariages propose des données plutôt parcellaire parfois ( de l'ordre ~ 10%) mais qui mérite 
-que l'on si interesse.""")
+que l'on s'y interesse de plus près.""")
 
 st.divider()
 st.markdown("""### 1. Timelines et indicateurs""")
