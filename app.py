@@ -12,13 +12,8 @@ exploration = st.Page(
     title="Exploration générationnelle",
     icon=":material/data_exploration:",
 )
-ad_analysis = st.Page(
-    "src/pages/advanced_analysis.py",
-    title="Analyses Avancées",
-    icon=":material/search_insights:",
-)
 game = st.Page("src/pages/game.py", title="Let's play !", icon=":material/joystick:")
 st.set_page_config(layout="wide")
 
-pg = st.navigation(pages=[home, birth, death, wedding, exploration, ad_analysis, game])
+pg = st.navigation(pages=[home, birth, death, wedding, exploration, game])
 pg.run()
