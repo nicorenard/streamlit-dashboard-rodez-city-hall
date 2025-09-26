@@ -135,7 +135,6 @@ with girl:
     ui.metric_card(title="👩 Prénom féminin le plus fréquent", content=name["female"])
 
 
-# record de naissances, naissances la plus basse
 st.markdown("""#### b. Records des Naissances""")
 
 result = top_or_down_birth(birth_load)
