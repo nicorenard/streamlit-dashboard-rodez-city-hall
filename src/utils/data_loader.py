@@ -52,8 +52,17 @@ def multiple_aggregate_by_year(
     death = aggregate_by_year(df2).fillna(0).astype(int)
     wedding = aggregate_by_year(df3).fillna(0).astype(int)
     final = pd.concat([birth, death, wedding], axis=1).reset_index()
-    final["annee"] = pd.to_numeric(final["annee"], downcast="integer")
+    final.columns = ["annee", "Naissances", "Décès", "Mariages"]
+    final["annee"] = final["annee"].astype(str)
     return final
+
+
+def multiple_event_by_year(
+    dt: pd.DataFrame, dt2: pd.DataFrame, dt3: pd.DataFrame, bins: int = 20
+) -> pd.DataFrame:
+    dataset = multiple_aggregate_by_year(dt, dt2, dt3)
+    dataset.set_index("annee", inplace=True)  # mettre les années en index
+    return dataset
 
 
 def aggregate_by_gender(dataset: pd.DataFrame, column_name: str) -> pd.Series:
@@ -154,7 +163,7 @@ def aggregate_by_gender_and_by_year(dataset: pd.DataFrame) -> pd.DataFrame:
     return df_pivot.astype(int)
 
 
-def top_or_down_birth(dataset: pd.DataFrame) -> Dict[str, Dict]:
+def top_or_down_birth(dataset: pd.DataFrame) -> Dict:
     """
     Returns a dict of metrics:
     - highest and lowest year (all genders combined)
