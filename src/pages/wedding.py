@@ -1,10 +1,3 @@
-"""
-Nombre de mariages par année/mois.
-Mariages par saison (printemps/été/automne/hiver).
-Âge moyen au mariage (par sexe, par décennie).
-Professions les plus fréquentes au mariage (nuage ou histogramme).
-"""
-
 import streamlit as st
 import altair as alt
 import streamlit_shadcn_ui as ui
