@@ -10,7 +10,6 @@ from src.utils import (
     aggregate_by_year,
     top_name_by_genre,
     find_name_query,
-    name_vs_name,
 )
 
 
@@ -88,36 +87,15 @@ if name_input:
     result = find_name_query(birth_load, name_input)
     st.metric("Nombre total d'occurrences détectées", result["total_occurence"])
     df_linechart = result["occurence_by_time"].reset_index()
+    df_linechart["annee"] = df_linechart["annee"].astype(str)
     df_linechart.columns = ["annee", "naissances"]
     st.line_chart(
-        df_linechart,
-        x="annee",
+        df_linechart.set_index("annee"),
         y="naissances",
         x_label="Années",
-        y_label="Nombre de naissances",
+        y_label="Naissances",
+        use_container_width=True,
     )
-
-
-st.write("#### c. Versus !")
-st.write("Petit comparatif rapide d'occurrence sur la période entre 2 prénoms")
-left, right = st.columns(2)
-
-with left:
-    name1 = st.text_input("1er prénom ?  👇", key="prenom1")
-with right:
-    name2 = st.text_input("2ème prénom ? 👇", key="prenom2")
-
-if name1 and name2:
-    result = name_vs_name(birth_load, name1, name2)
-
-    left.metric(name1, result[name1])
-    right.metric(name2, result[name2])
-
-    if result[name1] == result[name2]:
-        st.success(f"{result['winner']}")
-    else:
-        st.balloons()
-        st.success(f"🏆 Et le gagnant est : {result['winner']}")
 
 
 st.divider()
