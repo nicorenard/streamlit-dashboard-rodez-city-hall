@@ -18,7 +18,7 @@ birth_load = dataset_load("liste_des_naissances.csv")
 
 # header
 left, right = st.columns([1, 4])
-logo = left.image(image="src/assets/rodez_logo_propre.png", width=150)
+logo = left.image(image="src/static/rodez_logo_propre.png", width=150)
 right.title("Exploration des naissances")
 
 st.write(

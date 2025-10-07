@@ -21,7 +21,7 @@ death_load = dataset_load("liste_des_deces.csv")
 
 # header
 left, right = st.columns([1, 4])
-logo = left.image(image="src/assets/rodez_logo_propre.png", width=150)
+logo = left.image(image="src/static/rodez_logo_propre.png", width=150)
 right.title("Exploration des décès")
 
 st.write(
@@ -69,7 +69,7 @@ st.plotly_chart(fig, use_container_width=True)
 st.write(
     "#### Note\n"
     "La vue par genre n'est pas parfaite car beaucoup de lignes ne sont pas complète et la précision du genre est "
-    "plus présente dans le relevé vers les années 2000..."
+    "plus présente dans le relevé à partir des années 2000..."
 )
 st.divider()
 st.markdown("""### 2. Quelques indicateurs """)
@@ -202,7 +202,7 @@ chart = (
 st.altair_chart(chart, use_container_width=True)
 
 
-st.write("""#### c. Analyses par jours sur la période complète""")
+st.write("""#### c. Analyses par jours entre 1891-2016 """)
 
 df_days = death_by_day(death_load)
 df_plot3 = df_days.reset_index()

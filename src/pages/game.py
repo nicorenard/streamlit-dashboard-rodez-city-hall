@@ -14,7 +14,7 @@ from src.utils import name_vs_name, find_name_query, dataset_load
 
 # header
 left, right = st.columns([1, 4])
-logo = left.image(image="src/assets/rodez_logo_propre.png", width=150)
+logo = left.image(image="src/static/rodez_logo_propre.png", width=150)
 right.title("Exploration ludique des jeux de données!")
 
 # data
@@ -42,7 +42,7 @@ if name1 and name2:
 
     else:
         st.balloons()
-        st.success(f"🏆 Et le gagnant est : {result['winner']}")
+        st.success(f"🏆 Et le.a gagnant.e est : {result['winner']}")
 
     result1 = find_name_query(birth_load, name1)
     df_linechart1 = result1["occurence_by_time"].reset_index()

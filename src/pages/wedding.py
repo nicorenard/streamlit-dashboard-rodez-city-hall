@@ -23,7 +23,7 @@ wedding_set = dataset_load("liste_des_mariages.csv")
 
 # header
 left, right = st.columns([1, 4])
-logo = left.image(image="src/assets/rodez_logo_propre.png", width=150)
+logo = left.image(image="src/static/rodez_logo_propre.png", width=150)
 right.title("Statistique et exploration des mariages")
 
 st.write("""Le dataset des mariages propose des données plutôt parcellaire parfois ( de l'ordre ~ 10%) mais qui mérite 
@@ -104,7 +104,7 @@ sns.heatmap(
     cbar_kws={"label": "Nombre de mariages"},
     ax=axis,
 )
-axis.set_title("Nombre de mariages par saison et année")
+axis.set_title("Nombre de mariages par saison et par année")
 axis.set_xlabel("Années")
 axis.set_ylabel("Saison")
 st.pyplot(figure)
@@ -154,7 +154,7 @@ fig.add_trace(
 # Mise en forme
 fig.update_layout(
     barmode="group",
-    title="Évolution des types de couple depuis 2010",
+    title="Évolution des types de couple depuis 2013",
     xaxis_title="Années",
     yaxis_title="Pourcentage de mariages",
     template="plotly_white",
@@ -163,7 +163,7 @@ fig.update_layout(
 st.plotly_chart(fig)
 st.markdown("""#### b. Nuage de mots des professions""")
 st.write(
-    "Les professions sont présentes une partie du dataset et permet ici de les présenter sous une forme"
+    "Les professions sont présentes sur une partie du dataset et permet ici de les présenter sous une forme"
     "moins analytique et conventionnel comme un nuage de mot."
 )
 job_epoux, job_epouse = st.columns(2)
@@ -186,7 +186,7 @@ st.divider()
 st.markdown("""### 4. Quelques indicateurs optionnels""")
 
 # age moyen au mariage ( homme versus femme)
-st.markdown("""#### a. Évolution de l'âge moyen des époux/épouses entre 1981-2016""")
+st.markdown("""#### a. Évolution de l'âge moyen des mariés entre 1981-2016""")
 avg_age = average_wedding_age(wedding_set)
 fig_avg_age = go.Figure()
 
@@ -218,7 +218,7 @@ fig_avg_age.update_layout(
 
 st.plotly_chart(fig_avg_age)
 
-st.markdown("""#### b. Evolution de l'âge moyen par des époux/épouses""")
+st.markdown("""#### b. Quantification des âges et des genres entre 1891 et 2016""")
 
 age_counts = average_age_wedding_by_gender(wedding_set)
 age_counts = (

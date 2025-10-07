@@ -17,7 +17,7 @@ wedding_load = dataset_load("liste_des_mariages.csv")
 
 # header
 left, right = st.columns([1, 4])
-logo = left.image(image="src/assets/rodez_logo_propre.png", width=150)
+logo = left.image(image="src/static/rodez_logo_propre.png", width=150)
 right.title("Explorations temporelles transversale")
 
 st.write("""L'objectif de cette page est de metre en avant les données des 3 datasets et d'analyser d'un point de 

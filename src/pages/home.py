@@ -6,10 +6,16 @@ from src.utils import (
     aggregate_by_gender,
     multiple_aggregate_by_year,
     top_name,
+    load_css,
 )
+from src.components import render_footer
+
+
+load_css("style.css")
+
 
 col1, col2 = st.columns([1, 4])
-logo = col1.image(image="src/assets/rodez_logo_propre.png", width=150)
+logo = col1.image(image="src/static/rodez_logo_propre.png", width=150)
 title = col2.title("Rodez : histoire en données !")
 
 
@@ -24,10 +30,9 @@ st.write(
 )
 
 st.markdown("""##### Notes""")
-st.write(
-    "Les données proviennent de cette source : https://www.data.gouv.fr/datasets/population-mariages-deces-naissances-1/ en date du 17/10/2016.\n\n"
-    "Les données publiées comptabilisent l’ensemble des naissances, décès et mariages célébrés depuis 1891.\n\n"
-    "Les données sont classées par années et sur le dataset des naissances figurent  en plus le prénom de la personne concernée."
+st.markdown(
+    "* Les données publiées comptabilisent l’ensemble des naissances, décès et mariages célébrés depuis 1891.\n\n"
+    "* Les données sont classées par années et sur le dataset des naissances figurent en plus le prénom des personnes."
 )
 
 st.error(
@@ -106,3 +111,6 @@ left, middle, right = st.columns(3)
 left.page_link(label="Explorons les naissances", page="src/pages/birth.py", width="stretch")
 middle.page_link(label="Explorons les mariages", page="src/pages/wedding.py", width="stretch")
 right.page_link(label="Explorons les décès", page="src/pages/death.py", width="stretch")
+
+# footer
+render_footer()
