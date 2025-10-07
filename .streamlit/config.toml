@@ -1,7 +1,46 @@
+[server]
+enableStaticServing = true
+
+[[theme.fontFaces]]
+family = "Exo2"
+url = "src/static/fonts/Exo2-Regular.ttf"
+style = "normal"
+weight = 400
+
+[[theme.fontFaces]]
+family = "Exo2"
+url = "src/static/fonts/Exo2-Medium.ttf"
+style = "normal"
+weight = 500
+
+[[theme.fontFaces]]
+family = "Exo2"
+url = "src/static/fonts/Exo2-SemiBold.ttf"
+style = "normal"
+weight = 600
+
+
+#theme
 [theme]
 base = "light"
 primaryColor="#080100"
 backgroundColor="#fff7f7"
 secondaryBackgroundColor="#dadadb"
 textColor="#59092c"
-font = "sans serif"
+# Utilisation des polices personnalisées
+font = "Exo2"                        # Police principale
+codeFont = "JetBrains Mono"          # Police code (monospace)
+headingFontWeights = [600, 500, 500, 500, 500, 500]  # Poids titres
+headingFontSizes = ["2.5rem", "2rem", "1.5rem", "1.25rem", "1.1rem", "1rem"]
+
+# Paramètres typographiques avancés
+baseRadius = "0.5rem"                # Coins arrondis global
+buttonRadius = "0.375rem"            # Coins boutons
+codeFontSize = "0.875rem"           # Taille police code
+
+
+
+[browser]
+gatherUsageStats = false
+showErrorDetails = true
+
