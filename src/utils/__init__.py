@@ -28,3 +28,4 @@ from .data_loader import (
     age_gap_between_spouses,
     multiple_event_by_year,
 )
+from .css_loader import load_css
