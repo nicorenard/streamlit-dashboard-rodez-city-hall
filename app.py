@@ -1,5 +1,6 @@
 import streamlit as st
 
+from src.config import PAGE_CONFIG
 
 # navigation
 
@@ -13,7 +14,7 @@ exploration = st.Page(
     icon=":material/data_exploration:",
 )
 game = st.Page("src/pages/game.py", title="Let's play !", icon=":material/joystick:")
-st.set_page_config(layout="wide")
+st.set_page_config(**PAGE_CONFIG)
 
 pg = st.navigation(pages=[home, birth, death, wedding, exploration, game])
 pg.run()
