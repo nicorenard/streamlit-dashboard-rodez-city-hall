@@ -1,51 +1,45 @@
-import streamlit as st
 import plotly.express as px
+import streamlit as st
+from src.components import render_footer
 from src.utils import (
     dataset_load,
     size_dataset,
-    aggregate_by_gender,
+    aggregate_by_gender_df,
     multiple_aggregate_by_year,
     top_name,
     load_css,
 )
-from src.components import render_footer
-
 
 load_css("style.css")
 
 
 col1, col2 = st.columns([1, 4])
 logo = col1.image(image="src/static/rodez_logo_propre.png", width=150)
-title = col2.title("Rodez : histoire en données !")
+title = col2.title("Bienvenue dans l'explorateur des données de la ville de Rodez !")
 
 
-st.markdown("""### Bienvenue dans l'explorateur des données de la ville de Rodez !""")
-st.markdown("""#### 1. Objectif""")
+st.markdown("""#### 1. Objectif du projet""")
 st.write(
-    "L'objectif de cet explorateur est avant tout pour découvrir l'utilisation de *Streamlit*, un framework python"
-    "UI pour la divulgation de données sous forme de applications *data* simplement."
-    "Le second étant de me familiariser avec la manipulation des données, l'analyse sur un ou plusieurs dataset.\n"
-    "Et il s'avère que la ville de Rodez -*que je remercie au passage*- à mise a disposition 3 datasets "
-    "qui sont parfait pour démarrer sur le sujet ! 😉"
+    "L'objectif est avant tout formateur et pédagogique. L'idée est de créé un site d'exploration et de voir jusqu'ou les données de la ville peuvent"
+    " être exploitées. De plus le dataset n'ayant pas de réutilisation c'est l'ocassion de leur donner un peu plus de visibilité ! 😉"
 )
 
-st.markdown("""##### Notes""")
+st.markdown("""##### Note sur les datasets""")
 st.markdown(
-    "* Les données publiées comptabilisent l’ensemble des naissances, décès et mariages célébrés depuis 1891.\n\n"
-    "* Les données sont classées par années et sur le dataset des naissances figurent en plus le prénom des personnes."
+    "* Les données publiées comptabilisent l’ensemble des naissances, décès et mariages célébrés depuis 1891 jusqu'à 2016.\n\n"
 )
 
 st.error(
     "#### Important !\n\n "
     "Certaines données peuvent contenir des erreurs ou être incomplètes et les analyses ont été faites en "
-    "conséquences, au mieux de ce que les datasets donnent. Les datasets ont vu leurs entêtes ajoutés et le dataset "
-    "des mariages a été repris pour corriger des erreurs de décalage des données manuellement."
+    "conséquences, c'est à dire au mieux de ce que les datasets donnent. Les datasets ont vu leurs entêtes ajoutés et le dataset "
+    "des mariages a été repris pour corriger des erreurs de décalage des données mais de manière manuellement pour le site."
 )
 
 st.markdown("""#### 2. Quelques chiffres clés pour démarrer !""")
 
-st.write("Dans ce premier set, les valeurs sont les totaux relevés sans tri des valeurs nulles.")
-# carte ou metrics simples
+st.write("Dans ce premier jet, les valeurs sont les totaux brutes - sans tri des valeurs nulles - .")
+#  metriques simples
 n, m, d = st.columns(3)
 birth_load = dataset_load("liste_des_naissances.csv")
 birth = size_dataset(birth_load)
@@ -82,18 +76,20 @@ with st.container():
 
 st.markdown("""#### 4. Focus rapide sur certaines données""")
 
-st.write("Répartition Hommes/Femmes sur la période 1981-2016")
+st.write("Ratio Hommes/Femmes sur la période 1981-2016")
+st.info("Note : Homme  = bleu / Femme = rouge")
 n2, d2 = st.columns(2)
 fig = px.pie(
-    aggregate_by_gender(dataset=birth_load, column_name="genre"),
-    values=0,
-    title="Répartition au niveau des naissances",
+    aggregate_by_gender_df(dataset=birth_load, column_name="genre"),
+    values="count",
+    title="Ratio des Naissances",
 )
 n2.plotly_chart(fig, theme=None)
+
 fig2 = px.pie(
-    aggregate_by_gender(dataset=death_load, column_name="genre"),
-    values=0,
-    title="Répartition au niveau des décès",
+    aggregate_by_gender_df(dataset=death_load, column_name="genre"),
+    values="count",
+    title="Ratio des Décès",
 )
 d2.plotly_chart(fig2, theme=None)
 
