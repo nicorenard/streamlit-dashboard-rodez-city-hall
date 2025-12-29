@@ -1,8 +1,7 @@
-import streamlit as st
 import altair as alt
 import plotly.graph_objects as go
+import streamlit as st
 import streamlit_shadcn_ui as ui
-
 from src.utils import (
     dataset_load,
     aggregate_by_year,
@@ -25,7 +24,7 @@ logo = left.image(image="src/static/rodez_logo_propre.png", width=150)
 right.title("Exploration des décès")
 
 st.write(
-    "Le dataset des décès est très léger en terme de richesse des données.\n\n"
+    "Le dataset des décès est plutôt léger en terme de richesse des données.\n\n"
     "On notera cependant les élements suivant qui permettent : \n\n"
     "1) D'explorer temporellement les décès sur les années, d'avoir un focus sur certaines périodes traversées ou sur le genre \n"
     "2) D'effectuer une analyse des répartitions en fonctions des horaires \n"
@@ -43,9 +42,9 @@ with st.container():
 
 st.write(
     "#### Note\n"
-    "On remarque les pics historique sur les années des deux grandes guerres mondiales mais également apres "
-    "la période des 30 glorieuses que le nombre de décès ne cesse de croire. Une analyse croisée avec les naissances "
-    "pourra expliquer cette tendance à la hausse si la population vieillissante n'est pas renouvelée..."
+    "On remarque les pics historique sur les années des deux grandes guerres mondiales mais également après "
+    "la période des 30 glorieuses que le nombre de décès ne cesse de croitre. Une analyse croisée avec les naissances "
+    "pourrait expliquer cette tendance à la hausse si la population vieillissante n'est pas renouvelée..."
 )
 
 st.markdown("""#### b. Vue par genres""")
@@ -67,9 +66,9 @@ for genre, color in zip(["Féminin", "Masculin"], ["#FF69B4", "#1f77b4"]):
 st.plotly_chart(fig, use_container_width=True)
 
 st.write(
-    "#### Note\n"
-    "La vue par genre n'est pas parfaite car beaucoup de lignes ne sont pas complète et la précision du genre est "
-    "plus présente dans le relevé à partir des années 2000..."
+    "#### Note : \n"
+    "La vue par genre n'est pas parfaite car beaucoup de lignes sont incomplète et la précision du genre est "
+    "plus représenté dans le relevé à partir des années 2000..."
 )
 st.divider()
 st.markdown("""### 2. Quelques indicateurs """)
@@ -97,7 +96,7 @@ st.markdown("""### 3. Analyses de moyennes """)
 st.write("""#### a. Histogramme de l'age moyen du décès""")
 
 st.info("""##### Note
-Les données ici ne prennent pas en compte que les lignes complètes avec date de décès et de naissances!""")
+Les données ici ne prennent en compte que les lignes complètes avec date de décès et date de naissances!""")
 
 
 year_range = st.slider(

@@ -1,7 +1,6 @@
-import streamlit as st
 import plotly.graph_objects as go
+import streamlit as st
 import streamlit_shadcn_ui as ui
-
 from src.utils import (
     dataset_load,
     aggregate_by_gender_and_by_year,
@@ -12,7 +11,6 @@ from src.utils import (
     find_name_query,
 )
 
-
 # data
 birth_load = dataset_load("liste_des_naissances.csv")
 
@@ -22,7 +20,7 @@ logo = left.image(image="src/static/rodez_logo_propre.png", width=150)
 right.title("Exploration des naissances")
 
 st.write(
-    "Le dataset des naissances est plutôt léger en terme de richesse des données.\n\n"
+    "Le dataset des naissances est plutôt léger.\n\n"
     "On notera cependant les élements suivant qui permettent : \n\n"
     "1) D'explorer temporellement les naissances sur les années, d'avoir un focus sur certaines périodes traversées, quelques statistiques intéressantes\n"
     "2) D'effectuer une analyse des prénoms sous différents format ou comparaison \n"
@@ -82,7 +80,7 @@ st.dataframe(styled, use_container_width=True)
 
 st.write("#### b. Tendance et occurrence d'un prénom")
 
-name_input = st.text_input(label="Inscrire un prénom 👇")
+name_input = st.text_input(label="Tester la tendance d'un prénom :) 👇")
 if name_input:
     result = find_name_query(birth_load, name_input)
     st.metric("Nombre total d'occurrences détectées", result["total_occurence"])

@@ -1,10 +1,9 @@
-import streamlit as st
 import altair as alt
-import streamlit_shadcn_ui as ui
-import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-
+import seaborn as sns
+import streamlit as st
+import streamlit_shadcn_ui as ui
 from src.utils import (
     dataset_load,
     aggregate_by_year,

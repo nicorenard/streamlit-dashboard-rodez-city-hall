@@ -75,9 +75,6 @@ def aggregate_by_gender(dataset: pd.DataFrame, column_name: str) -> pd.Series:
     df = df[df['genre'].notna()]   # on retire les valeurs "null"
     df = df[df['genre'].str.lower() != 'ind_termin_']
 
-    unique_genres = df['genre'].unique()
-    print(unique_genres)
-
     return df.groupby("genre").size()
 
 

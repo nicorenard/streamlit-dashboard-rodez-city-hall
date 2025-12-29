@@ -6,8 +6,8 @@ Impact des événements historiques : guerres mondiales, baby-boom, crises sanit
 Comparaison inter-périodes : avant/après-guerre, baby-boom, crises.
 """
 
-import streamlit as st
 import plotly.express as px
+import streamlit as st
 from src.utils import dataset_load, multiple_event_by_year
 
 # data
@@ -20,8 +20,8 @@ left, right = st.columns([1, 4])
 logo = left.image(image="src/static/rodez_logo_propre.png", width=150)
 right.title("Explorations temporelles transversale")
 
-st.write("""L'objectif de cette page est de metre en avant les données des 3 datasets et d'analyser d'un point de 
-vue historique, démographique les données. Le but but est de comparer les tendances et les interactions temporelles.""")
+st.write("""L'objectif de cette page est de mettre en avant les données des 3 datasets et d'analyser d'un point de 
+vue historique, démographique les données. Le but est de comparer les tendances et les interactions temporelles.""")
 
 st.divider()
 st.markdown("""### 1. Volumétries annuelles""")
