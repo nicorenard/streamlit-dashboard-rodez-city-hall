@@ -3,7 +3,7 @@ from .data_loader import (
     size_dataset,
     aggregate_by_year,
     multiple_aggregate_by_year,
-    aggregate_by_gender,
+    aggregate_by_gender_df,
     top_name,
     _aggregate_by_name,
     aggregate_by_gender_and_by_year,

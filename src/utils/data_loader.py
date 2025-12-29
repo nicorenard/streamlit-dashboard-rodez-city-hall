@@ -64,11 +64,20 @@ def multiple_event_by_year(
     dataset.set_index("annee", inplace=True)  # mettre les années en index
     return dataset
 
+def aggregate_by_gender_df(dataset: pd.DataFrame, column_name: str) -> pd.DataFrame:
+    counts = aggregate_by_gender(dataset, column_name)
+    return counts.reset_index().rename(columns={'index': 'genre', 0: 'count'})
 
 def aggregate_by_gender(dataset: pd.DataFrame, column_name: str) -> pd.Series:
     if column_name not in dataset.columns:
         raise KeyError(f"Column '{column_name}' doesn't exist")
     df = dataset.rename(columns={column_name: "genre"})
+    df = df[df['genre'].notna()]   # on retire les valeurs "null"
+    df = df[df['genre'].str.lower() != 'ind_termin_']
+
+    unique_genres = df['genre'].unique()
+    print(unique_genres)
+
     return df.groupby("genre").size()
 
 
