@@ -11,7 +11,6 @@ from .data_loader import (
     top_name_by_genre,
     top_name_by_year_and_gender,
     find_name_query,
-    name_vs_name,
     top_year_and_down_year,
     average_death_age_by_year,
     death_age_histogram,
@@ -22,7 +21,7 @@ from .data_loader import (
     wedding_by_month_chart,
     wedding_by_season_month,
     wedding_type_gender,
-    wordcloud_jobs,
+    generate_wordcloud_jobs_panel,
     average_wedding_age,
     average_age_wedding_by_gender,
     age_gap_between_spouses,
@@ -30,3 +29,4 @@ from .data_loader import (
 )
 from .css_loader import load_css
 from .quizz import calculate_score, questions
+from .quiz_game import calculate_score, questions
