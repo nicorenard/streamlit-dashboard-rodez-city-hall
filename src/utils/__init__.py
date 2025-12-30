@@ -28,5 +28,5 @@ from .data_loader import (
     multiple_event_by_year,
 )
 from .css_loader import load_css
-from .quizz import calculate_score, questions
 from .quiz_game import calculate_score, questions
+from .mystery_game import PERIODES, stats_period, generate_text

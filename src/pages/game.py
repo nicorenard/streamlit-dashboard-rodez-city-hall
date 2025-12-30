@@ -1,41 +1,33 @@
-"""
-Moteur de recherche (par prénom, année, type d’événement).
-Exploration générationnelle ludique : cliquer sur une décennie → voir prénoms les plus donnés, âge moyen au mariage, espérance de vie.
-Quiz interactif :
-"Quel était le prénom le plus donné en 1920 ?"
-"Quel était l’âge moyen au mariage dans les années 1950 ?"
-Battle de prénoms : comparer deux prénoms (ex. Jean vs Paul) sur un graphe interactif.
-"""
-
+import random
 import streamlit as st
-
-from src.utils import name_vs_name, find_name_query, dataset_load, questions, calculate_score
-
+from src.utils import find_better_name_game, find_name_query, dataset_load, questions, calculate_score, PERIODES, \
+    stats_period
+from src.utils.mystery_game import generate_text
 
 # header
 left, right = st.columns([1, 4])
 logo = left.image(image="src/static/rodez_logo_propre.png", width=150)
 right.title("Exploration ludique des jeux de données!")
 
-st.markdown("""### L'objectif de cette page est de 'jouer' avec les données et de voir d'autres possibilités d'exploitation d'un dataset même léger.""")
+st.write(""" L'objectif de cette page est de 'jouer' avec les données et de voir d'autres possibilités d'exploitation sur des dataset même léger.""")
 st.divider()
 # data
 birth_load = dataset_load("liste_des_naissances.csv")
 
 # Naissance
 
-st.write("#### 1. Dataset des naissances : 💪 Versus 💪!")
-st.info("Objectif : Découvrir qui est le prénom le plus utilisé sur la période au complet ! 😎")
+st.write("### 1.  💪 Versus 💪!")
+st.info("Objectif : Découvrez quel prénom a été le plus populaire sur la période 1981-2016 ! 😎")
 
 left, right = st.columns(2)
 
 with left:
-    name1 = st.text_input("Inscrire un 1er prénom ?  👇", key="prenom1")
+    name1 = st.text_input("Inscrire un 1er prénom  👇", key="prenom1")
 with right:
-    name2 = st.text_input("Inscrire un 2ème prénom ? 👇", key="prenom2")
+    name2 = st.text_input("Inscrire un 2ème prénom 👇", key="prenom2")
 
 if name1 and name2:
-    result = name_vs_name(birth_load, name1, name2)
+    result = find_better_name_game(birth_load, name1, name2)
     left.metric(name1, result[name1])
     right.metric(name2, result[name2])
 
@@ -70,8 +62,13 @@ if name1 and name2:
     )
 
 
-st.write("#### 2.  🤔 Quizz Générale sur les données du site !")
+st.divider()
+st.write("### 2.  🤔 Quiz Général sur les données du site !")
 st.info("Objectif : Découvrez votre score en répondant à ces 6 questions ! 🤓")
+
+if st.button(label="🔄 Relancer le quiz"):
+    st.session_state.clear()
+    st.rerun()
 
 if "current_question" not in st.session_state:
     st.session_state.current_question = 0
@@ -94,13 +91,44 @@ else:
     st.write("### Résultat du quiz :")
     for i, r in enumerate(results):
         if r["is_correct"]:
-            st.success(f"Question {i+1}: ✅ Correct ({r['user_answer']})")
+            st.success(f"Question {i+1}: ✅ Correct = {r['user_answer']}")
         else:
-            st.error(f"Question {i+1}: ❌ Incorrect ({r['user_answer']}) - Réponse correcte: {r['correct_answer']}")
+            st.error(f"Question {i+1}: ❌ Incorrect = {r['user_answer']} - La bonne réponse était : {r['correct_answer']}")
     st.write(f"**Votre score final : {score}/{len(questions)}**")
 
-st.write("#### 3. 💭 Devine qui c'est !")
-st.write(
-    "Objectif : clic pour une periode d'une année, un random est fait, affiche un graphe (deces, naissance et "
-    "mariage confondu, selectionne ton resultat et visualisez les résultats ! 🤗"
+
+
+st.divider()
+st.write("## 3. 🎭 Profil mystère !")
+st.info(
+    "Objectif : Trouver la période ou cette personne 'fictive' aurait pu naitre ! 🤗"
 )
+
+if st.button("Rejouer !"):
+    del st.session_state.period
+    del st.session_state.stats
+    del st.session_state.text
+    st.rerun()
+
+
+if "period" not in st.session_state:
+    st.session_state.period = random.choice(list(PERIODES.keys()))
+    starting_date, final_date = PERIODES[st.session_state.period]
+    st.session_state.stats = stats_period(starting_date, final_date)
+    st.session_state.text = generate_text(st.session_state.stats)
+
+
+st.markdown(st.session_state.text, unsafe_allow_html=True)
+
+response = st.radio(
+    "À quelle période cette personne aurait pu naître ?",
+    list(PERIODES.keys())
+)
+
+if st.button("Valider"):
+    if response == st.session_state.period:
+        st.success("Bonne réponse !")
+    else:
+        st.error(
+            f"Mauvaise réponse. La bonne période était **{st.session_state.period}**."
+        )
