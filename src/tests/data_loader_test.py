@@ -125,14 +125,14 @@ class DataLoader(TestCase):
 
         pd.testing.assert_frame_equal(result_sorted, expected_sorted, check_dtype=False)
 
-    def test_aggregate_by_sex(self):
-        data = pd.DataFrame({"sexe": ["H", "F", "H", "F", "F"]})
-        result = aggregate_by_gender(data, "sexe")
+    def test_aggregate_by_gender(self):
+        data = pd.DataFrame({"genre": ["H", "F", "H", "F", "F"]})
+        result = aggregate_by_gender(data, "genre")
 
         expected = pd.Series([2, 3], index=pd.Index(["H", "F"], name="genre"))
         pd.testing.assert_series_equal(result.sort_index(), expected.sort_index())
 
-    def test_aggregate_by_sex_missing_column(self):
+    def test_aggregate_by_gender_missing_column(self):
         data = pd.DataFrame({"age": [25, 30, 40]})
         with self.assertRaises(KeyError):
-            aggregate_by_gender(data, "sexe")
+            aggregate_by_gender(data, "genre")
