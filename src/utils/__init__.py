@@ -30,3 +30,4 @@ from .data_loader import (
 from .css_loader import load_css
 from .quiz_game import calculate_score, questions
 from .mystery_game import PERIODES, stats_period, generate_text
+from .versus_game import find_better_name_game

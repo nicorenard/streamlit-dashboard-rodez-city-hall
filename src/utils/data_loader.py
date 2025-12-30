@@ -139,22 +139,6 @@ def find_name_query(dataset: pd.DataFrame, name: str) -> Dict[str, int | pd.Seri
     return {"total_occurence": total_name, "occurence_by_time": occurrence_in_year}
 
 
-def name_vs_name(dataset: pd.DataFrame, name1: str, name2: str) -> Dict[str, str]:
-    result_name1 = find_name_query(dataset, name1)
-    result_name2 = find_name_query(dataset, name2)
-
-    if result_name1["total_occurence"] > result_name2["total_occurence"]:
-        winner = name1
-    elif result_name1["total_occurence"] == result_name2["total_occurence"]:
-        winner = "Exæquo"
-    else:
-        winner = name2
-
-    return {
-        name1: result_name1["total_occurence"],
-        name2: result_name2["total_occurence"],
-        "winner": winner,
-    }
 
 
 def aggregate_by_gender_and_by_year(dataset: pd.DataFrame) -> pd.DataFrame:
@@ -439,7 +423,7 @@ def wedding_type_gender(dt: pd.DataFrame) -> pd.DataFrame:
     return df_type_couple
 
 
-def wordcloud_jobs(dt: pd.DataFrame, column_name: str) -> WordCloud:
+def generate_wordcloud_jobs_panel(dt: pd.DataFrame, column_name: str) -> WordCloud:
     df = dt.copy()
     df = df[["annee", column_name]].dropna()
     df[column_name] = df[column_name].astype(str).str.strip().str.replace("_", "e")
