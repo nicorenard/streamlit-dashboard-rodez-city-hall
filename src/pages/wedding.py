@@ -11,7 +11,7 @@ from src.utils import (
     wedding_by_month_chart,
     wedding_by_season_month,
     wedding_type_gender,
-    wordcloud_jobs,
+    generate_wordcloud_jobs_panel,
     average_wedding_age,
     average_age_wedding_by_gender,
     age_gap_between_spouses,
@@ -167,14 +167,14 @@ st.write(
 )
 job_epoux, job_epouse = st.columns(2)
 
-wc = wordcloud_jobs(wedding_set, "profession_epoux")
+wc = generate_wordcloud_jobs_panel(wedding_set, "profession_epoux")
 fig_wc, axis_wc = plt.subplots(figsize=(10, 5))
 axis_wc.imshow(wc, interpolation="bilinear")
 axis_wc.axis("off")
 job_epoux.pyplot(fig_wc)
 job_epoux.write("Profession des 'époux'")
 
-wc2 = wordcloud_jobs(wedding_set, "profession_epouse")
+wc2 = generate_wordcloud_jobs_panel(wedding_set, "profession_epouse")
 fig_wc2, axis_wc2 = plt.subplots(figsize=(10, 5))
 axis_wc2.imshow(wc2, interpolation="bilinear")
 axis_wc2.axis("off")
