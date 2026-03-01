@@ -1,6 +1,7 @@
 from typing import Dict
 import pandas as pd
 from pathlib import Path
+import streamlit as st
 from pandas import DataFrame
 from wordcloud import WordCloud
 from .data_loader_rules import is_lower, is_csv
@@ -24,7 +25,7 @@ def _load_with_unknown_delimiter(filepath: Path, delimiters=(",", ";", "\t", "|"
             print(f"Erreur avec le séparateur '{sep}': {e}")
     raise ValueError("Aucun délimiteur approprié trouvé!")
 
-
+@st.cache_data
 def dataset_load(file_name: str) -> pd.DataFrame:
     if not is_lower(file_name):
         raise ValueError("Dataset name is not valid : file name should be lower case.")
@@ -53,7 +54,9 @@ def multiple_aggregate_by_year(
     wedding = aggregate_by_year(df3).fillna(0).astype(int)
     final = pd.concat([birth, death, wedding], axis=1).reset_index()
     final.columns = ["annee", "Naissances", "Décès", "Mariages"]
-    final["annee"] = final["annee"].astype(str)
+    final["annee"] = pd.to_numeric(final["annee"], errors="coerce")
+    final = final.dropna(subset=["annee"])
+    final["annee"] = final["annee"].astype(int)
     return final
 
 
@@ -133,11 +136,19 @@ def _reshape_names_by_gender_and_year(dataset: pd.DataFrame) -> pd.DataFrame:
 
 def find_name_query(dataset: pd.DataFrame, name: str) -> Dict[str, int | pd.Series]:
     df = _reshape_names_by_gender_and_year(dataset)
-    df_name = df[df["prenom"].str.lower() == name.lower()]  # filter on name
+    df_name = df[df["prenom"].str.lower() == name.lower()]
     total_name = len(df_name)
-    occurrence_in_year = df_name.groupby("annee").size()
-    return {"total_occurence": total_name, "occurence_by_time": occurrence_in_year}
+    all_years = sorted(df["annee"].dropna().unique())
+    occurrence_in_year = (
+        df_name.groupby("annee")
+        .size()
+        .reindex(all_years, fill_value=0)
+    )
 
+    return {
+        "total_occurence": total_name,
+        "occurence_by_time": occurrence_in_year
+    }
 
 
 
