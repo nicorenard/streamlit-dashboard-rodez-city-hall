@@ -1,7 +1,6 @@
 questions = [
     {"question": "Quelle est la date qui représente un creux dans la natalité ?",
-    "options": ["1916", " 1983", "2011"],
-    "answer": "1983"},
+    "options": ["1916", "1983", "2011"], "answer": "1983"},
     {"question": "Quel est le prénom TOP homme de l'année 1980?",
      "options": ["Jean", "Pierre", "Nicolas", "Sebastien"], "answer": "Nicolas"},
     {"question": "Quelle année à l'espérance de vie la plus faible?",
