@@ -49,6 +49,9 @@ st.write(
 
 st.markdown("""#### b. Vue par genres""")
 dfg = aggregate_by_gender_and_by_year(death_load).reset_index()
+genre_cols = [col for col in ["Féminin", "Masculin"] if col in dfg.columns]
+dfg = dfg[dfg[genre_cols].max(axis=1) > 2]
+dfg["annee"] = dfg["annee"].astype(int)
 
 fig = go.Figure()
 for genre, color in zip(["Féminin", "Masculin"], ["#FF69B4", "#1f77b4"]):
