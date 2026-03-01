@@ -162,8 +162,8 @@ fig.update_layout(
 st.plotly_chart(fig)
 st.markdown("""#### b. Nuage de mots des professions""")
 st.write(
-    "Les professions sont présentes sur une partie du dataset et permet ici de les présenter sous une forme"
-    "moins analytique et conventionnel comme un nuage de mot."
+    "Les professions sont présents sur une partie du dataset et le format du nuage de mots permet ici faire ressortir les"
+    "métiers sous un format moins conventionnel."
 )
 job_epoux, job_epouse = st.columns(2)
 
