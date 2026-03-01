@@ -57,7 +57,7 @@ st.plotly_chart(fig, use_container_width=True)
 
 st.write(
     "#### Note\n"
-    "La chute de natalité pour les année 1982-1983 fait partie d'un ensemble de facteurs économiques, sociale "
+    "La chute de natalité pour les années 1982-1983 fait partie d'un ensemble de facteurs économiques, sociale "
     "et culturel dont une partie des réponses peut se retrouver comme expliqué "
     "dans cet article du Monde : https://www.lemonde.fr/archives/article/1983/10/05/la-natalite-continue-de-baisser-en"
     "-france-50-000-naissances-de-moins-en-1983_3077597_1819218.html"
