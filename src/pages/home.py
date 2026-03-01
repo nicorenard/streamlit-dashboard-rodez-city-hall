@@ -38,7 +38,6 @@ st.error(
 
 st.markdown("""#### 2. Quelques chiffres clés pour démarrer !""")
 
-st.write("Dans ce premier jet, les valeurs sont les totaux brutes - sans tri des valeurs nulles - .")
 #  metriques simples
 n, m, d = st.columns(3)
 birth_load = dataset_load("liste_des_naissances.csv")
@@ -53,7 +52,7 @@ d.metric(label="Nombre total des décès", value=f"{death}", border=True)
 
 st.markdown("""#### 3. Timeline des naissances, mariages et décès""")
 
-st.info("Note : les valeurs avec une année inférieur à 1981 ont été ignorées.")
+st.info("Note : les valeurs avec une année inférieure à 1981 ont été ignorées.")
 
 timeline = multiple_aggregate_by_year(birth_load, death_load, wedding_load)
 with st.container():
@@ -103,6 +102,7 @@ st.bar_chart(
 
 st.markdown("""#### 4. Approfondir l'exploration ?""")
 
+st.write("Pour approfondir l'exploration, vous pouvez cliquer sur les boutons suivants")
 left, middle, right = st.columns(3)
 left.page_link(label="Explorons les naissances", page="src/pages/birth.py", width="stretch")
 middle.page_link(label="Explorons les mariages", page="src/pages/wedding.py", width="stretch")
