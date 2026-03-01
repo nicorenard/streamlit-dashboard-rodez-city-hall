@@ -8,7 +8,7 @@ Comparaison inter-périodes : avant/après-guerre, baby-boom, crises.
 
 import plotly.express as px
 import streamlit as st
-from src.utils import dataset_load, multiple_event_by_year
+from src.utils import dataset_load, multiple_event_by_year, multiple_aggregate_by_year
 
 # data
 birth_load = dataset_load("liste_des_naissances.csv")
@@ -55,11 +55,114 @@ if selected_years:
 
 
 st.divider()
-st.markdown("""### 2. Indicateurs dynamiques""")
-# carte de metriques / barre empilées
-# naissances/deces ( soldes naturels)
-# mariages/naissances ( indicateur indirecte de ma contexte social)
-# deces/mariages ( chox demographique pendant les crises)
+st.markdown("### 2. Indicateurs dynamiques")
+st.markdown(
+    "Les indicateurs combinent naissances, mariages et décès pour analyser "
+    "les dynamiques démographiques et sociales au fil du temps."
+)
+
+# --- Préparation timeline ---
+timeline = multiple_aggregate_by_year(
+    birth_load,
+    death_load,
+    wedding_load
+)
+
+timeline = timeline.sort_values("annee").copy()
+
+# colonne affichage pour éviter 1,950
+timeline["annee_label"] = timeline["annee"].astype(str)
+
+# --- Slider temporel ---
+year_min = int(timeline["annee"].min())
+year_max = int(timeline["annee"].max())
+
+year_range = st.slider(
+    "Période d'analyse",
+    min_value=year_min,
+    max_value=year_max,
+    value=(year_min, year_max)
+)
+
+# filtrage sécurisé
+filtered = timeline[
+    (timeline["annee"] >= year_range[0]) &
+    (timeline["annee"] <= year_range[1])
+].copy()
+
+# --- Choix indicateur ---
+indicator = st.radio(
+    "Indicateur",
+    [
+        "Solde naturel (Naissances - Décès)",
+        "Mariages / Naissances",
+        "Décès / Mariages"
+    ],
+    horizontal=True
+)
+
+if indicator == "Solde naturel (Naissances - Décès)":
+    filtered["indicateur"] = filtered["Naissances"] - filtered["Décès"]
+    label = "Solde naturel"
+
+elif indicator == "Mariages / Naissances":
+    filtered["indicateur"] = (
+        filtered["Mariages"] / filtered["Naissances"].replace(0, None)
+    )
+    label = "Mariages / Naissances"
+
+else:
+    filtered["indicateur"] = (
+        filtered["Décès"] / filtered["Mariages"].replace(0, None)
+    )
+    label = "Décès / Mariages"
+
+# --- Metrics ---
+c1, c2, c3 = st.columns(3)
+
+with c1:
+    st.metric("Moyenne", round(filtered["indicateur"].mean(), 2))
+
+with c2:
+    st.metric("Maximum", round(filtered["indicateur"].max(), 2))
+
+with c3:
+    st.metric("Minimum", round(filtered["indicateur"].min(), 2))
+
+# --- Graphique ---
+st.line_chart(
+    filtered,
+    x="annee_label",
+    y="indicateur",
+    y_label=label,
+    x_label="Année"
+)
+st.markdown("### Comprendre le graphique")
+
+if indicator == "Solde naturel (Naissances - Décès)":
+    st.write(
+        "Un solde positif indique une croissance naturelle de la population, "
+        "un solde négatif un vieillissement ou une période de crise."
+    )
+
+elif indicator == "Mariages / Naissances":
+    st.write(
+        "Ce ratio reflète indirectement le contexte social et les comportements familiaux.\n"
+        "Les analyses possibles:  \n"
+        "- Ratio élevé = Mariages plus fréquents, Natalité plus tardive ou en baisse,\n"
+        "- Ratio faible = Forte natalité avec de structures familiales plus traditionnelles ou plus jeunes"
+    )
+
+else:
+    st.write(
+        "L'Indicateur de stress démographique.\n "
+        "Ce ratio est très sensible aux crises, un ratio élevé peut signaler une période de tension démographique ou sociale.\n"
+        "Les analyses possibles:  \n"
+        "- Ratio élevé : Moins de mariages, plus de décès, causes => Climat anxiogène (guerre, épidémie, crise économique)\n"
+        "- Ratio faible : Société stable => Projection dans l’avenir (mariages nombreux)"
+    )
+
+
 
 st.divider()
 st.markdown("""### 3. Décalages générationnels""")
