@@ -55,13 +55,17 @@ st.markdown("""#### 3. Timeline des naissances, mariages et décès""")
 st.info("Note : les valeurs avec une année inférieure à 1981 ont été ignorées.")
 
 timeline = multiple_aggregate_by_year(birth_load, death_load, wedding_load)
+timeline = timeline.copy()
+timeline["annee"] = timeline["annee"].astype(int).astype(str)
+
 with st.container():
     st.line_chart(
         timeline,
         color=["#1CAEED", "#000000", "#ED1C6E"],
         x="annee",
         x_label="Années",
-        y_label="Valeurs Dénombrées",
+        y_label="Volume de Naissances/Déces/Mariages",
+        use_container_width=True,
     )
 
     st.write(
