@@ -1,7 +1,7 @@
 import pandas as pd
 from typing import Dict
 
-from .data_loader import find_name_query
+from .data_calculation import find_name_query
 
 
 def find_better_name_game(dataset: pd.DataFrame, name1: str, name2: str) -> Dict[str, str]:
