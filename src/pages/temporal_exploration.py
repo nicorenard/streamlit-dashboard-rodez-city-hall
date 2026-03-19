@@ -325,70 +325,88 @@ with c1:
         18, 40, 30
     )
 
-chart_data = chart_data[chart_data["annee"] >= 1981]
-# ==============================
-# 5. Domaine X = années réelles
-# ==============================
-year_min = int(chart_data["annee"].min())
-year_max = int(chart_data["annee"].max())
+with c2:
+    death_shift = st.slider(
+        "Décalage moyen décès (années après naissance)",
+        60, 100, 80
+    )
 
-# ==============================
-# 6. Périodes historiques filtrées
-# ==============================
-periods = pd.DataFrame([
-    {"start": 1914, "end": 1918, "label": "WW1"},
-    {"start": 1918, "end": 1919, "label": "Grippe espagnole"},
-    {"start": 1939, "end": 1945, "label": "WW2"},
-    {"start": 1945, "end": 1975, "label": "Baby boom"},
-    {"start": 2020, "end": 2022, "label": "COVID"},
-])
 
-periods = periods[
-    (periods["end"] >= year_min) &
-    (periods["start"] <= year_max)
+# 4. Alignement générationnel
+
+# Décalage des mariages et décès
+data["Mariages_alignés"] = data["Mariages"].shift(-marriage_shift)
+data["Décès_alignés"] = data["Décès"].shift(-death_shift)
+
+# Colonnes utilisées pour le graphique
+cols_required = ["Naissances", "Mariages_alignés", "Décès_alignés"]
+cols_required = [c for c in cols_required if c in data.columns]
+
+# Filtrer les lignes avec toutes les valeurs présentes
+chart_data = data.dropna(subset=cols_required).copy()
+
+chart_data["annee"] = chart_data["annee"].astype(int)
+chart_data = chart_data[
+    (chart_data["annee"] >= year_range[0]) &
+    (chart_data["annee"] <= year_range[1])
 ]
+# Forcer la plage selon le slider utilisateur
+x_domain = [year_range[0], year_range[1]]
 
-# ==============================
-# 7. Construction graphique
-# ==============================
+# Définir la base du graphique
 base = alt.Chart(chart_data).encode(
     x=alt.X(
         "annee:Q",
         title="Année",
-        scale=alt.Scale(domain=[year_min, year_max], nice=False),
-        axis=alt.Axis(format="d")   # indice brut
+        scale=alt.Scale(domain=x_domain, nice=False),
+        axis=alt.Axis(format="d")
     )
 )
 
-birth_line = base.mark_line(size=2).encode(
-    y="Naissances:Q"
+
+# Lignes pour chaque indicateur
+birth_line = base.mark_line(size=2, color="blue").encode(
+    y=alt.Y("Naissances:Q", title="Effectifs")
 )
 
-marriage_line = base.mark_line(size=2).encode(
+marriage_line = base.mark_line(size=2, color="green").encode(
     y="Mariages_alignés:Q"
 )
 
-death_line = base.mark_line(size=2).encode(
+death_line = base.mark_line(size=2, color="red").encode(
     y="Décès_alignés:Q"
 )
 
-bands = alt.Chart(periods).mark_rect(opacity=0.15).encode(
+# Périodes historiques
+
+periods = pd.DataFrame([
+    {"start": 1914, "end": 1918, "label": "1ere Guerre mondiale"},
+    {"start": 1918, "end": 1919, "label": "Grippe espagnole"},
+    {"start": 1939, "end": 1945, "label": "2nd Guerre mondiale"},
+    {"start": 1945, "end": 1975, "label": "Baby boom"},
+    {"start": 2020, "end": 2022, "label": "COVID"},
+])
+periods_filtered = periods[
+    (periods["end"] >= x_domain[0]) &
+    (periods["start"] <= x_domain[1])
+]
+
+bands = alt.Chart(periods_filtered).mark_rect(opacity=0.15, color="gray").encode(
     x="start:Q",
     x2="end:Q"
 )
 
-labels = alt.Chart(periods).mark_text(dy=-5).encode(
+labels = alt.Chart(periods_filtered).mark_text(dy=-5, color="black").encode(
     x="start:Q",
     text="label:N"
 )
 
+# Combiner tout
 chart = bands + birth_line + marriage_line + death_line + labels
 
 st.altair_chart(chart, use_container_width=True)
 
-# ==============================
-# 8. Indicateurs générationnels
-# ==============================
+
 st.markdown("#### Lecture générationnelle")
 
 col1, col2, col3 = st.columns(3)
@@ -402,9 +420,7 @@ with col2:
 with col3:
     st.metric("Décès alignés moyens", int(chart_data["Décès_alignés"].mean()))
 
-# ==============================
-# 9. Interprétation automatique
-# ==============================
+# interpretation
 birth_peak = int(chart_data.loc[chart_data["Naissances"].idxmax(), "annee"])
 
 st.info(
