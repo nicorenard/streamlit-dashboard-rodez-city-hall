@@ -10,6 +10,6 @@ def render_footer():
         <p><a href="https://www.data.gouv.fr/datasets/population-mariages-deces-naissances-1/" target="_blank">Source des datasets</a> | Dernière mise à jour : 17-10-2016</p>
     </div>
     <div class="footer-bottom">
-        © 2026 - Tous droits réservés - Nicolas Renard
+        © 2026 - Tous droits réservés - Nicolas Renard | Logo ville de Rodez : © Ville de Rodez  - https://www.ville-rodez.fr/
     </div>
     """)
