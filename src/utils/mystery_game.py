@@ -1,7 +1,7 @@
 import random
 
-from . import average_wedding_age
-from .data_loader import dataset_load, _age_of_death
+from .data_loader import dataset_load
+from .data_calculation import _age_of_death, average_wedding_age
 
 PERIODES = {
     "1891–1930": (1891, 1930),
