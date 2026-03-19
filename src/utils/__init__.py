@@ -1,6 +1,6 @@
-from .data_loader import (
-    dataset_load,
-    size_dataset,
+from .data_loader import dataset_load
+from .data_calculation import (
+size_dataset,
     aggregate_by_year,
     multiple_aggregate_by_year,
     aggregate_by_gender_df,
