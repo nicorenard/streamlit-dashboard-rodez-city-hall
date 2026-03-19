@@ -23,10 +23,13 @@ pour démarrer sur le sujet !
 - Les décès : un Focus sur le dataset des décès
 - Les mariages : un focus sur le dataset des mariages
 - Exploration générationnelle : Pour croiser les données entre elles
-- Modélisation avancées : indices démographiques entre autres, espérances de vies
 - Quizz et jeux : Quelques quizz interactif basé sur les dataset qui seront présentés en amont, recherche de prénoms
 
 ## Déploiement
+
+Le déploiement est prévu en production sur la plateforme cloud streamlit.io à cette adresse : 
+
+https://rodez-histoire-en-donnees.streamlit.app/
 
 ### Local ?
 
@@ -38,12 +41,6 @@ Le projet est packagé avec UV. Pour pouvoir déployer l'application en local su
 - ``cd dossier/projet``
 - ``uv sync``
 - ``uv streamlit run app.py``
-
-### Cloud ?
-
-L'application est disponible sur le cloud sur l'hébergeur "streamlit cloud" : 
-
-"lien"
 
 
 ### Ressources
