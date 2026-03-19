@@ -284,8 +284,46 @@ with c2:
 
 st.divider()
 st.markdown("""### 4. Focus historique""")
-# selecteur de periode (menu deroulant, 14-18, 39-45, 68-75)
-# graphique qui evolue et montre les valeurs de mariages, deces etc....
+st.markdown("### Focus historique et générations")
+st.caption("Lecture générationnelle croisée des naissances, mariages et décès.")
+
+# Timeline globale
+timeline = multiple_aggregate_by_year(
+    birth_load,
+    death_load,
+    wedding_load
+).copy()
+
+timeline["annee"] = pd.to_numeric(timeline["annee"])
+timeline = timeline.sort_values("annee")
+
+#  Selection periode utilisateur
+
+year_min_all = int(timeline["annee"].min())
+year_max_all = int(timeline["annee"].max())
+
+year_range = st.slider(
+    "Période d'observation",
+    min_value=year_min_all,
+    max_value=year_max_all,
+    value=(year_min_all, year_max_all)
+)
+
+data = timeline[
+    (timeline["annee"] >= year_range[0]) &
+    (timeline["annee"] <= year_range[1])
+].copy()
+
+
+# Paramètres générationnels
+
+c1, c2 = st.columns(2)
+
+with c1:
+    marriage_shift = st.slider(
+        "Décalage moyen mariages (années après naissance)",
+        18, 40, 30
+    )
 
 chart_data = chart_data[chart_data["annee"] >= 1981]
 # ==============================
