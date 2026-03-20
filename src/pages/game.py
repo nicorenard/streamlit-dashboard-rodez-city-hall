@@ -17,7 +17,7 @@ birth_load = dataset_load("liste_des_naissances.csv")
 # Naissance
 
 st.write("### 1.  💪 Versus 💪!")
-st.info("Objectif : Découvrez quel prénom a été le plus populaire sur la période 1981-2016 ! 😎")
+st.info("Objectif : Découvrez quel prénom a été le plus populaire sur la période 1891-2016 ! 😎")
 
 left, right = st.columns(2)
 

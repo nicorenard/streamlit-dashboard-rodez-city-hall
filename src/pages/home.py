@@ -52,7 +52,7 @@ d.metric(label="Nombre total des décès", value=f"{death}", border=True)
 
 st.markdown("""#### 3. Timeline des naissances, mariages et décès""")
 
-st.info("Note : les valeurs avec une année inférieure à 1981 ont été ignorées.")
+st.info("Note : les valeurs avec une année inférieure à 1891 ont été ignorées.")
 
 timeline = multiple_aggregate_by_year(birth_load, death_load, wedding_load)
 timeline = timeline.copy()
@@ -79,7 +79,7 @@ with st.container():
 
 st.markdown("""#### 4. Focus rapide sur certaines données""")
 
-st.write("Ratio Hommes/Femmes sur la période 1981-2016")
+st.write("Ratio Hommes/Femmes sur la période 1891-2016")
 st.info("Note : Homme  = bleu / Femme = rouge")
 n2, d2 = st.columns(2)
 fig = px.pie(
@@ -97,7 +97,7 @@ fig2 = px.pie(
 d2.plotly_chart(fig2, theme=None)
 
 
-st.write("Top 5 des prénoms sur la période 1981-2016")
+st.write("Top 5 des prénoms sur la période 1891-2016")
 st.bar_chart(
     data=top_name(dataset=birth_load, column_name="pr1", limiter=5),
     x_label="Prénoms",

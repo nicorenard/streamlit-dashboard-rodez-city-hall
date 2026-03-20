@@ -103,7 +103,7 @@ Les données ici ne prennent en compte que les lignes complètes avec date de d�
 
 
 year_range = st.slider(
-    label="Période à sélectionner", min_value=1981, max_value=2016, value=(1981, 2016)
+    label="Période à sélectionner", min_value=1891, max_value=2016, value=(1891, 2016)
 )
 histo = death_age_histogram(death_load, 20, year_range)
 st.bar_chart(histo)

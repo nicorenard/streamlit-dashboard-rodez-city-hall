@@ -60,7 +60,7 @@ st.divider()
 st.markdown("""### 2. Répartitions temporelles""")
 
 
-st.markdown("""#### a. Histogramme des mariages par mois entre 1981-2016""")
+st.markdown("""#### a. Histogramme des mariages par mois entre 1891-2016""")
 df_plot = wedding_by_month_chart(wedding_set).reset_index()
 df_plot.columns = ["Mois", "Mariages"]
 
@@ -185,7 +185,7 @@ st.divider()
 st.markdown("""### 4. Quelques indicateurs optionnels""")
 
 # age moyen au mariage ( homme versus femme)
-st.markdown("""#### a. Évolution de l'âge moyen des mariés entre 1981-2016""")
+st.markdown("""#### a. Évolution de l'âge moyen des mariés entre 1891-2016""")
 avg_age = average_wedding_age(wedding_set)
 fig_avg_age = go.Figure()
 
