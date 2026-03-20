@@ -47,7 +47,7 @@ with down:
     ui.metric_card(
         title="🤍Année la plus basse",
         content=df["lowest_year"]["year"],
-        description=f"{df['lowest_year']['value']} décès",
+        description=f"{df['lowest_year']['value']} marriages",
     )
 
 
