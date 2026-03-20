@@ -19,6 +19,17 @@ birth_load = dataset_load("liste_des_naissances.csv")
 st.write("### 1.  💪 Versus 💪!")
 st.info("Objectif : Découvrez quel prénom a été le plus populaire sur la période 1891-2016 ! 😎")
 
+if "prenom1" not in st.session_state:
+    st.session_state["prenom1"] = ""
+if "prenom2" not in st.session_state:
+    st.session_state["prenom2"] = ""
+
+def clear_inputs():
+    st.session_state["prenom1"] = ""
+    st.session_state["prenom2"] = ""
+
+st.button("🧹 Effacer les prénoms", on_click=clear_inputs)
+
 left, right = st.columns(2)
 
 with left:
